@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vault - Request Payout</title>
+    <style>
+        :root {
+            --bg-pure: #030002;
+            --neon-red: #ff0037;
+            --neon-red-glow: rgba(255, 0, 55, 0.45);
+            --neon-red-dim: rgba(255, 0, 55, 0.15);
+            --glass-card: rgba(18, 5, 8, 0.6);
+            --glass-border: rgba(255, 0, 55, 0.18);
+            --text-main: #ffffff;
+            --text-muted: #a69fa3;
+            --warning-yellow: #ffb700;
+            --success-green: #00e676;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-pure);
+            background-image: 
+                radial-gradient(circle at 50% -10%, rgba(255, 0, 55, 0.15) 0%, transparent 50%),
+                linear-gradient(180deg, #050002 0%, #0c0104 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .back-btn {
+            background: none;
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .page-title {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .balance-preview-card {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .balance-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .balance-val {
+            font-size: 1.8rem;
+            font-weight: 900;
+        }
+
+        .form-card {
+            background: rgba(10, 3, 5, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .amount-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .amount-chip {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 16px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border-radius: 14px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .amount-chip.selected {
+            background: var(--neon-red);
+            border-color: var(--neon-red);
+            box-shadow: 0 0 15px var(--neon-red-glow);
+            transform: scale(0.98);
+        }
+
+        .method-toggle-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .toggle-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 12px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border: 1px solid var(--glass-border);
+        }
+
+        .method-section {
+            display: none;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .method-section.visible {
+            display: flex;
+        }
+
+        .input-field {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 14px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            outline: none;
+            width: 100%;
+        }
+
+        .input-field:focus {
+            border-color: var(--neon-red);
+            box-shadow: 0 0 10px var(--neon-red-dim);
+        }
+
+        .submit-btn {
+            background: var(--neon-red);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--neon-red-glow);
+            margin-top: 10px;
+        }
+
+        .submit-btn:disabled {
+            background: #4a131e;
+            color: #8a7377;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* PREMIUM STYLISH OVERLAY & POPUP STYLES */
+        .notification-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(3, 0, 2, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 24px;
+        }
+
+        .notification-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .premium-popup {
+            background: rgba(20, 6, 10, 0.9);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 40px rgba(255, 0, 55, 0.2);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 360px;
+            padding: 28px;
+            text-align: center;
+            transform: scale(0.85);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .notification-overlay.show .premium-popup {
+            transform: scale(1);
+        }
+
+        .popup-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .icon-success {
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--success-green);
+            border: 1px solid var(--success-green);
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.3);
+        }
+
+        .icon-error {
+            background: rgba(255, 0, 55, 0.15);
+            color: var(--neon-red);
+            border: 1px solid var(--neon-red);
+            box-shadow: 0 0 15px var(--neon-red-glow);
+        }
+
+        .popup-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .popup-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .popup-action-btn {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            cursor: pointer;
+            width: 100%;
+            letter-spacing: 0.5px;
+            transition: opacity 0.2s;
+        }
+
+        .popup-action-btn:active {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-nav">
+        <button class="back-btn" id="backBtn">←</button>
+        <h1 class="page-title">Payout Vault</h1>
+    </header>
+
+    <div class="balance-preview-card">
+        <div class="balance-label">Withdrawable Balance</div>
+        <div class="balance-val">₹<span id="currentBalance">0.00</span></div>
+    </div>
+
+    <main class="form-card">
+        <div class="input-group">
+            <label>Select Payout Amount</label>
+            <div class="amount-grid" id="amountSelectorGrid">
+                <div class="amount-chip" data-value="300">₹300</div>
+                <div class="amount-chip" data-value="500">₹500</div>
+                <div class="amount-chip" data-value="1000">₹1000</div>
+                <div class="amount-chip" data-value="5000">₹5000</div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Payout Method</label>
+            <div class="method-toggle-container">
+                <button type="button" class="toggle-btn active" id="selectUpiBtn">UPI ID</button>
+                <button type="button" class="toggle-btn" id="selectBankBtn">Bank Transfer</button>
+            </div>
+        </div>
+
+        <div class="method-section visible" id="sectionUPI">
+            <div class="input-group">
+                <label>UPI Virtual Address (VPA)</label>
+                <input type="text" id="upiIdField" class="input-field" placeholder="example@apl / paytm">
+            </div>
+        </div>
+
+        <div class="method-section" id="sectionBank">
+            <div class="input-group">
+                <label>1. Account Holder Name</label>
+                <input type="text" id="bankNameField" class="input-field" placeholder="Full legal name">
+            </div>
+            <div class="input-group">
+                <label>2. IFSC Code</label>
+                <input type="text" id="bankIfscField" class="input-field" placeholder="SBIN00XXXXX" style="text-transform: uppercase;">
+            </div>
+            <div class="input-group">
+                <label>3. Account Number</label>
+                <input type="number" id="bankAccountField" class="input-field" placeholder="Enter bank account number">
+            </div>
+        </div>
+
+        <button class="submit-btn" id="requestBtn">Submit Payout Request</button>
+    </main>
+
+    <div class="notification-overlay" id="notificationOverlay">
+        <div class="premium-popup">
+            <div class="popup-icon" id="popupIcon">✓</div>
+            <h3 class="popup-title" id="popupTitle">Notification</h3>
+            <p class="popup-desc" id="popupDesc">Message text goes here.</p>
+            <button class="popup-action-btn" id="popupActionBtn">Acknowledge</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDrAocFm8fnX2hJg2TyKQbmNe65C8ta4OA",
+            authDomain: "aviator-f562e.firebaseapp.com",
+            databaseURL: "https://aviator-f562e-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "aviator-f562e",
+            storageBucket: "aviator-f562e.firebasestorage.app",
+            messagingSenderId: "649327828612",
+            appId: "1:649327828612:web:f599fb22598002b6016cd1",
+            measurementId: "G-RHZ13ET692"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let runningBalance = 0;
+        let selectedAmount = null;
+        let activeMethod = "UPI";
+        let holdsRedirect = false;
+
+        // Custom Overlay Controller Trigger
+        const overlay = document.getElementById('notificationOverlay');
+        const pIcon = document.getElementById('popupIcon');
+        const pTitle = document.getElementById('popupTitle');
+        const pDesc = document.getElementById('popupDesc');
+        const pBtn = document.getElementById('popupActionBtn');
+
+        function showPremiumPopup(type, title, description, structureRedirect = false) {
+            holdsRedirect = structureRedirect;
+            pTitle.textContent = title;
+            pDesc.textContent = description;
+
+            if(type === 'success') {
+                pIcon.className = "popup-icon icon-success";
+                pIcon.textContent = "✓";
+                pBtn.style.background = "var(--success-green)";
+                pBtn.style.color = "#000000";
+            } else {
+                pIcon.className = "popup-icon icon-error";
+                pIcon.textContent = "✕";
+                pBtn.style.background = "var(--neon-red)";
+                pBtn.style.color = "#ffffff";
+            }
+            overlay.classList.add('show');
+        }
+
+        pBtn.addEventListener('click', () => {
+            overlay.classList.remove('show');
+            if(holdsRedirect) {
+                window.location.href = "../wallet.html";
+            }
+        });
+
+        document.getElementById('backBtn').addEventListener('click', () => {
+            window.location.href = "../wallet.html";
+        });
+
+        const chips = document.querySelectorAll('.amount-chip');
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => c.classList.remove('selected'));
+                chip.classList.add('selected');
+                selectedAmount = parseFloat(chip.dataset.value);
+            });
+        });
+
+        const selectUpiBtn = document.getElementById('selectUpiBtn');
+        const selectBankBtn = document.getElementById('selectBankBtn');
+        const sectionUPI = document.getElementById('sectionUPI');
+        const sectionBank = document.getElementById('sectionBank');
+
+        selectUpiBtn.addEventListener('click', () => {
+            selectUpiBtn.classList.add('active');
+            selectBankBtn.classList.remove('active');
+            sectionUPI.classList.add('visible');
+            sectionBank.classList.remove('visible');
+            activeMethod = "UPI";
+        });
+
+        selectBankBtn.addEventListener('click', () => {
+            selectBankBtn.classList.add('active');
+            selectUpiBtn.classList.remove('active');
+            sectionBank.classList.add('visible');
+            sectionUPI.classList.remove('visible');
+            activeMethod = "BANK";
+        });
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+                    if (docSnap.exists()) {
+                        runningBalance = parseFloat(docSnap.data().balance || 0);
+                        document.getElementById('currentBalance').textContent = runningBalance.toFixed(2);
+                    }
+                });
+            } else {
+                window.location.href = "../login.html";
+            }
+        });
+
+        document.getElementById('requestBtn').addEventListener('click', async () => {
+            // 1. Check if an amount option is chosen
+            if (!selectedAmount) {
+                showPremiumPopup('error', 'Selection Required', 'Please select a payout amount from the options grid.');
+                return;
+            }
+
+            // 2. Perform fluid ledger validation check (Insufficient Balance)
+            if (selectedAmount > runningBalance) {
+                showPremiumPopup('error', 'Balance Insufficient', 'Your active wallet balance parameters do not support this withdrawal allocation.');
+                return;
+            }
+
+            let computedDetailsString = "";
+
+            // 3. Section inputs validation check
+            if (activeMethod === "UPI") {
+                const upiVal = document.getElementById('upiIdField').value;
+                if (!upiVal.trim()) {
+                    showPremiumPopup('error', 'Missing Data', 'Please supply your operational UPI Virtual Payment Address.');
+                    return;
+                }
+                computedDetailsString = "Method: UPI | ID: " + upiVal.trim();
+            } else {
+                const holderName = document.getElementById('bankNameField').value;
+                const ifscCode = document.getElementById('bankIfscField').value;
+                const accountNum = document.getElementById('bankAccountField').value;
+
+                if (!holderName.trim() || !ifscCode.trim() || !accountNum.trim()) {
+                    showPremiumPopup('error', 'Incomplete Form', 'Please fully satisfy the Account Holder Name, IFSC layout, and Account Numbers field parameters.');
+                    return;
+                }
+                computedDetailsString = `Method: BANK | Holder: ${holderName.trim()} | IFSC: ${ifscCode.trim().toUpperCase()} | Acc: ${accountNum.trim()}`;
+            }
+
+            // Disable button during pipeline writes
+            document.getElementById('requestBtn').disabled = true;
+
+            try {
+                const transactionId = "TXW-" + Date.now();
+                
+                // Write into global administrative pipeline queues
+                const adminRequestRef = doc(db, "withdrawals", transactionId);
+                await setDoc(adminRequestRef, {
+                    uid: currentUser.uid,
+                    email: currentUser.email || "Anonymous Terminal",
+                    amount: selectedAmount,
+                    details: computedDetailsString,
+                    status: "pending",
+                    timestamp: serverTimestamp(),
+                    txid: transactionId
+                });
+
+                // Write identical tracking subcollection history record
+                const userHistoryRef = doc(db, "users", currentUser.uid, "history", transactionId);
+                await setDoc(userHistoryRef, {
+                    type: "withdraw",
+                    amount: selectedAmount,
+                    status: "pending",
+                    timestamp: serverTimestamp(),
+                    note: "Vault Payout Request"
+                });
+
+                // 4. Everything bypasses and succeeds -> Show 24 Hours Custom Popup
+                showPremiumPopup('success', 'Processing Request', 'Your payout submission was accepted. Withdrawal will reflect in your account within 24 hours.', true);
+
+            } catch (err) {
+                console.error("Pipeline mapping validation fault: ", err);
+                showPremiumPopup('error', 'Network Error', 'Pipeline connectivity loss registered during tracking data deployment.');
+                document.getElementById('requestBtn').disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

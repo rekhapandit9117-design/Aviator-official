@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aviator Premium - Gateway Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-pure: #0a0203;
+            --neon-red: #ff0037;
+            --neon-red-glow: rgba(255, 0, 55, 0.45);
+            --glass-card: rgba(22, 10, 11, 0.85);
+            --glass-border: rgba(255, 0, 55, 0.18);
+            --text-main: #ffffff;
+            --text-muted: #fca5a5;
+            --success-green: #00e676;
+            --premium-gold: #ffb700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-pure);
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(255, 0, 55, 0.15) 0%, transparent 60%),
+                radial-gradient(circle at 50% 90%, rgba(153, 27, 27, 0.12) 0%, transparent 60%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .page-header {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .btn-back {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:active {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--neon-red);
+            transform: scale(0.95);
+        }
+
+        .page-title {
+            font-size: 1.35rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 900;
+            text-shadow: 0 0 20px rgba(255,0,55,0.25);
+        }
+
+        .page-title span { color: var(--neon-red); }
+
+        .payment-card {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(15px);
+        }
+
+        .scanner-wrapper {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px dashed rgba(255, 0, 55, 0.3);
+            border-radius: 16px;
+            padding: 15px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .scanner-img {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .scanner-laser {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--neon-red), transparent);
+            box-shadow: 0 0 8px var(--neon-red);
+            animation: scanMotion 3s linear infinite;
+        }
+
+        @keyframes scanMotion {
+            0% { top: 5%; }
+            50% { top: 95%; }
+            100% { top: 5%; }
+        }
+
+        .amount-display {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin: 15px 0;
+            color: #ffffff;
+        }
+
+        .amount-display span { color: var(--premium-gold); }
+
+        .status-banner {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .status-banner.status-pending { 
+            color: var(--premium-gold); 
+            border-color: rgba(255,183,0,0.2); 
+            background: rgba(255,183,0,0.05);
+        }
+        
+        .status-banner.status-success { 
+            color: var(--success-green); 
+            border-color: rgba(0,230,118,0.4); 
+            background: rgba(0,230,118,0.1);
+            font-weight: 900; 
+            box-shadow: 0 0 15px rgba(0,230,118,0.15);
+        }
+        
+        .status-banner.status-failed { 
+            color: var(--neon-red); 
+            border-color: rgba(255,0,55,0.4); 
+            background: rgba(255,0,55,0.1);
+            font-weight: 900; 
+        }
+
+        .countdown-node {
+            display: none;
+            background: rgba(255, 0, 55, 0.05);
+            border: 1px solid rgba(255, 0, 55, 0.2);
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .countdown-node.active { display: flex; }
+        .countdown-node span { color: var(--neon-red); text-shadow: 0 0 10px var(--neon-red-glow); }
+
+        .action-btn {
+            background: linear-gradient(135deg, #ff0037 0%, #b91c1c 100%);
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--neon-red-glow);
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:disabled {
+            background: #2a1015 !important;
+            color: #5a4f52;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .input-field {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--glass-border);
+            padding: 14px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        .premium-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 2, 3, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .premium-popup-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .premium-popup-box {
+            background: #160a0b;
+            border: 2px solid var(--neon-red);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 380px;
+            padding: 30px 24px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 0, 55, 0.3);
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .premium-popup-overlay.open .premium-popup-box {
+            transform: scale(1);
+        }
+        .premium-popup-icon {
+            font-size: 2.8rem;
+            color: var(--neon-red);
+            margin-bottom: 16px;
+            text-shadow: 0 0 15px rgba(255, 0, 55, 0.4);
+        }
+        .premium-popup-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .premium-popup-msg {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+        .premium-popup-btn {
+            background: linear-gradient(135deg, #ff0037 0%, #b91c1c 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-weight: 700;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 12px var(--neon-red-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="page-header">
+        <a href="addmoney.html" class="btn-back" id="gatewayBackBtn">
+            <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <h1 class="page-title">Deposit <span>Gateway</span></h1>
+    </header>
+
+    <div class="payment-card">
+        <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">Secure Settlement Node</p>
+        
+        <div class="scanner-wrapper">
+            <div class="scanner-laser"></div>
+            <img src="scanner.png" alt="Merchant QR Destination" class="scanner-img" onerror="this.style.background='rgba(255,255,255,0.05)';">
+        </div>
+        
+        <div class="amount-display">₹<span id="targetAmountDisplay">0.00</span></div>
+        
+        <input type="text" id="utrInputField" class="input-field" placeholder="Enter@upi id / UTR Number" maxlength="12">
+
+        <div id="paymentStatusNode" class="status-banner status-pending">
+            Awaiting Client Authorization
+        </div>
+
+        <div id="countdownClockDisplay" class="countdown-node">
+            <i class="fa-solid fa-stopwatch fa-spin"></i> Processing: <span id="clockValueString">10:00</span>
+        </div>
+
+        <button class="action-btn" id="transmitPaymentBtn">WHEN PAYMENT IS DONE THEN CLICK HERE</button>
+    </div>
+
+    <div class="premium-popup-overlay" id="appPopupOverlay">
+        <div class="premium-popup-box">
+            <div class="premium-popup-icon" id="popupIconSlot"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="premium-popup-title" id="appPopupTitle">Notification</div>
+            <div class="premium-popup-msg" id="appPopupMessage">Message details will load here.</div>
+            <button class="premium-popup-btn" id="appPopupDismissBtn">Acknowledge</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDrAocFm8fnX2hJg2TyKQbmNe65C8ta4OA",
+            authDomain: "aviator-f562e.firebaseapp.com",
+            databaseURL: "https://aviator-f562e-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "aviator-f562e",
+            storageBucket: "aviator-f562e.firebasestorage.app",
+            messagingSenderId: "649327828612",
+            appId: "1:649327828612:web:f599fb22598002b6016cd1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUid = null;
+        let activeTxId = null;
+        let liveUnsubscribe = null;
+        let countdownTimerReference = null;
+        let processingSuccess = false; 
+
+        const overlayElement = document.getElementById('appPopupOverlay');
+        const titleElement = document.getElementById('appPopupTitle');
+        const msgElement = document.getElementById('appPopupMessage');
+        const dismissBtnElement = document.getElementById('appPopupDismissBtn');
+        const iconSlot = document.getElementById('popupIconSlot');
+
+        function triggerPremiumModal(title, msg, type = "error") {
+            titleElement.textContent = title;
+            msgElement.textContent = msg;
+            
+            if (type === "success") {
+                iconSlot.innerHTML = '<i class="fa-solid fa-circle-check" style="color: var(--success-green);"></i>';
+                iconSlot.style.textShadow = "0 0 15px rgba(0, 230, 118, 0.4)";
+            } else {
+                iconSlot.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color: var(--neon-red);"></i>';
+                iconSlot.style.textShadow = "0 0 15px rgba(255, 0, 55, 0.4)";
+            }
+            overlayElement.classList.add('open');
+        }
+
+        dismissBtnElement.addEventListener('click', () => {
+            overlayElement.classList.remove('open');
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const depositAmount = parseFloat(urlParams.get('amount') || urlParams.get('amt') || 500);
+        document.getElementById('targetAmountDisplay').textContent = depositAmount.toFixed(2);
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) { 
+                currentUid = user.uid; 
+                restoreActiveSessionPipeline();
+            } else { 
+                window.location.href = "../login.html"; 
+            }
+        });
+
+        function standardClockEngine(expirationTimeMs) {
+            const displayContainer = document.getElementById('countdownClockDisplay');
+            const stringOutput = document.getElementById('clockValueString');
+            displayContainer.classList.add('active');
+
+            if (countdownTimerReference) clearInterval(countdownTimerReference);
+
+            function executionTick() {
+                const now = Date.now();
+                const totalDiff = expirationTimeMs - now;
+
+                if (totalDiff <= 0) {
+                    clearInterval(countdownTimerReference);
+                    stringOutput.textContent = "00:00";
+                    clearCachedSessionMemory();
+                    handleTerminalReset();
+                    return;
+                }
+
+                const calculateMinutes = Math.floor(totalDiff / 60000);
+                const calculateSeconds = Math.floor((totalDiff % 60000) / 1000);
+                stringOutput.textContent = 
+                    (calculateMinutes < 10 ? "0" : "") + calculateMinutes + ":" + 
+                    (calculateSeconds < 10 ? "0" : "") + calculateSeconds;
+            }
+
+            executionTick();
+            countdownTimerReference = setInterval(executionTick, 1000);
+        }
+
+        function clearCachedSessionMemory() {
+            localStorage.removeItem('aviator_active_tx');
+            localStorage.removeItem('aviator_timer_expiry');
+        }
+
+        function handleTerminalReset() {
+            if (countdownTimerReference) clearInterval(countdownTimerReference);
+            document.getElementById('countdownClockDisplay').classList.remove('active');
+            document.getElementById('transmitPaymentBtn').disabled = false;
+            document.getElementById('utrInputField').disabled = false;
+            const backBtn = document.getElementById('gatewayBackBtn');
+            backBtn.style.pointerEvents = "auto";
+            backBtn.style.opacity = "1";
+            
+            const statusNode = document.getElementById('paymentStatusNode');
+            statusNode.className = "status-banner status-pending";
+            statusNode.textContent = "Awaiting Client Authorization";
+        }
+
+        function restoreActiveSessionPipeline() {
+            const cachedTx = localStorage.getItem('aviator_active_tx');
+            const cachedExpiry = localStorage.getItem('aviator_timer_expiry');
+
+            if (cachedTx && cachedExpiry) {
+                const targetExpiry = parseInt(cachedExpiry, 10);
+                if (targetExpiry > Date.now()) {
+                    activeTxId = cachedTx;
+                    
+                    document.getElementById('transmitPaymentBtn').disabled = true;
+                    document.getElementById('utrInputField').disabled = true;
+                    const backBtn = document.getElementById('gatewayBackBtn');
+                    backBtn.style.pointerEvents = "none";
+                    backBtn.style.opacity = "0.3";
+
+                    const statusNode = document.getElementById('paymentStatusNode');
+                    statusNode.className = "status-banner status-pending";
+                    statusNode.textContent = "Verifying on admin desk... Do not refresh";
+
+                    standardClockEngine(targetExpiry);
+                    const historyDocRef = doc(db, "users", currentUid, "history", activeTxId);
+                    bindLiveTxObserver(historyDocRef);
+                } else {
+                    clearCachedSessionMemory();
+                }
+            }
+        }
+
+        document.getElementById('transmitPaymentBtn').addEventListener('click', async () => {
+            const utrVal = document.getElementById('utrInputField').value.trim();
+            if(utrVal.length < 4) {
+                triggerPremiumModal("Validation Error", "Please input a valid transaction reference sequence identifier.");
+                return;
+            }
+
+            if (!currentUid) {
+                triggerPremiumModal("Security Hold", "Authentication check running. Please try again in a moment.");
+                return;
+            }
+
+            const transmitBtn = document.getElementById('transmitPaymentBtn');
+            const backBtn = document.getElementById('gatewayBackBtn');
+            
+            transmitBtn.disabled = true;
+            document.getElementById('utrInputField').disabled = true;
+            
+            backBtn.style.pointerEvents = "none";
+            backBtn.style.opacity = "0.3";
+            
+            activeTxId = "TXN" + Date.now() + Math.floor(Math.random() * 1000);
+            processingSuccess = false; 
+            
+            const statusNode = document.getElementById('paymentStatusNode');
+            statusNode.className = "status-banner status-pending";
+            statusNode.textContent = "Transmitting metrics to monitoring console...";
+
+            const calculatedExpiryTime = Date.now() + (10 * 60 * 1000);
+            localStorage.setItem('aviator_active_tx', activeTxId);
+            localStorage.setItem('aviator_timer_expiry', calculatedExpiryTime.toString());
+
+            standardClockEngine(calculatedExpiryTime);
+
+            const historyDocRef = doc(db, "users", currentUid, "history", activeTxId);
+            
+            try {
+                await setDoc(historyDocRef, {
+                    amount: depositAmount,
+                    type: "deposit",
+                    status: "pending",
+                    isProcessed: false, 
+                    utr: utrVal,
+                    timestamp: serverTimestamp(),
+                    note: "Manual Gateway Settlement Request",
+                    uid: currentUid,
+                    txId: activeTxId
+                });
+
+                statusNode.textContent = "Verifying on admin desk... Do not refresh";
+                bindLiveTxObserver(historyDocRef);
+
+            } catch (err) {
+                console.error(err);
+                clearCachedSessionMemory();
+                statusNode.className = "status-banner status-failed";
+                statusNode.textContent = "Transmission Interrupted";
+                transmitBtn.disabled = false;
+                document.getElementById('utrInputField').disabled = false;
+                backBtn.style.pointerEvents = "auto";
+                backBtn.style.opacity = "1";
+                document.getElementById('countdownClockDisplay').classList.remove('active');
+                if (countdownTimerReference) clearInterval(countdownTimerReference);
+            }
+        });
+
+        function bindLiveTxObserver(documentReference) {
+            const statusNode = document.getElementById('paymentStatusNode');
+            const backBtn = document.getElementById('gatewayBackBtn');
+            
+            liveUnsubscribe = onSnapshot(documentReference, async (snapshot) => {
+                if(snapshot.exists()) {
+                    const txData = snapshot.data();
+                    const liveStatus = txData.status ? txData.status.toLowerCase() : 'pending';
+
+                    if((liveStatus === "approved" || liveStatus === "success") && !processingSuccess && !txData.isProcessed) {
+                        processingSuccess = true; 
+                        
+                        if(liveUnsubscribe) liveUnsubscribe();
+                        if (countdownTimerReference) clearInterval(countdownTimerReference);
+                        
+                        document.getElementById('countdownClockDisplay').classList.remove('active');
+                        clearCachedSessionMemory();
+
+                        // Visual Success Update
+                        statusNode.className = "status-banner status-success";
+                        statusNode.innerHTML = '<i class="fa-solid fa-circle-check"></i> Success! Synchronizing wallet...';
+
+                        const userProfileDocRef = doc(db, "users", currentUid);
+                        try {
+                            await runTransaction(db, async (transaction) => {
+                                const currentTxSnapshot = await transaction.get(documentReference);
+                                if (!currentTxSnapshot.exists() || currentTxSnapshot.data().isProcessed === true) {
+                                    throw new Error("Safety Abort: Balance updates already executed.");
+                                }
+
+                                const userSnapshot = await transaction.get(userProfileDocRef);
+                                let absoluteCurrentBalance = 0;
+                                
+                                if (userSnapshot.exists()) {
+                                    const userData = userSnapshot.data();
+                                    absoluteCurrentBalance = parseFloat(userData.balance || 0);
+                                }
+                                
+                                // Automatically add the dynamic value parsed from the landing parameters
+                                const updatedBalanceValue = absoluteCurrentBalance + txData.amount;
+                                
+                                transaction.update(userProfileDocRef, { balance: updatedBalanceValue });
+                                transaction.update(documentReference, { isProcessed: true });
+                            });
+
+                            statusNode.innerHTML = `<i class="fa-solid fa-circle-check"></i> ₹${txData.amount.toFixed(2)} Added Automatically!`;
+                            triggerPremiumModal("Deposit Approved", `Successfully deposited ₹${txData.amount.toFixed(2)} directly into your gaming vault profile.`, "success");
+
+                        } catch (transactionError) {
+                            console.error("Wallet transaction handling update: ", transactionError.message);
+                            statusNode.textContent = "Confirmed! Balance will refresh momentarily.";
+                        }
+                        
+                        setTimeout(() => { window.location.href = "../wallet.html"; }, 3500);
+                    } 
+                    else if(liveStatus === "failed") {
+                        if(liveUnsubscribe) liveUnsubscribe();
+                        if (countdownTimerReference) clearInterval(countdownTimerReference);
+                        
+                        document.getElementById('countdownClockDisplay').classList.remove('active');
+                        clearCachedSessionMemory();
+
+                        statusNode.className = "status-banner status-failed";
+                        statusNode.textContent = "Payment Verification Declined by Admin.";
+                        triggerPremiumModal("Deposit Declined", "The administrative desk could not verify this transaction reference. Please try again with valid parameters.");
+                        
+                        setTimeout(() => {
+                            document.getElementById('transmitPaymentBtn').disabled = false;
+                            document.getElementById('utrInputField').disabled = false;
+                            backBtn.style.pointerEvents = "auto";
+                            backBtn.style.opacity = "1";
+                            statusNode.className = "status-banner status-pending";
+                            statusNode.textContent = "Awaiting Alternative Reference Sequence";
+                        }, 4000);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

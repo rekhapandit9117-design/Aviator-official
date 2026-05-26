@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Aviator Console</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-main: #0a0203;
+            --bg-card: rgba(22, 10, 11, 0.85);
+            --border-premium: rgba(239, 68, 68, 0.18);
+            --text-primary: #ffffff;
+            --text-secondary: #fca5a5;
+            --accent-glow: #ef4444; 
+            --accent-crimson: #991b1b;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 50% 10%, rgba(239, 68, 68, 0.15) 0%, transparent 60%),
+                radial-gradient(circle at 50% 90%, rgba(153, 27, 27, 0.15) 0%, transparent 60%);
+            background-attachment: fixed;
+            padding-bottom: 90px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+
+        /* --- HEADER SECTION --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 8px 4px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-notify-access {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-glow);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.05);
+        }
+
+        .btn-notify-access:hover {
+            background: var(--accent-glow);
+            color: #fff;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            background: rgba(239, 68, 68, 0.08);
+            padding: 8px;
+            border-radius: 50%;
+            border: 1px solid var(--border-premium);
+        }
+
+        .user-avatar {
+            font-size: 16px;
+            color: var(--accent-glow);
+        }
+
+        /* --- METRIC STATS CARDS --- */
+        .stats-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            padding: 18px 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border-premium);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .stat-info h3 {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-info p { 
+            font-size: 24px; 
+            font-weight: 700; 
+        }
+
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            background: rgba(239,68,68,0.05);
+            border: 1px solid rgba(239,68,68,0.15);
+        }
+        .icon-premium { color: var(--accent-glow); text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+        .icon-success { color: var(--accent-success); text-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+
+        /* --- CONTENT MAIN CARD --- */
+        .content-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid var(--border-premium);
+            padding: 20px 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.4);
+        }
+
+        .card-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            border-left: 3px solid var(--accent-glow);
+            padding-left: 8px;
+        }
+
+        /* --- SMARTPHONE OPTIMIZED PLAYER CARDS --- */
+        .player-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .player-row-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(239, 68, 68, 0.06);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: background 0.2s;
+        }
+
+        .player-meta-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .player-identity h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+
+        .player-identity p {
+            font-size: 12px;
+            color: #fca5a5;
+        }
+
+        .player-joined-date {
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            text-align: right;
+        }
+
+        .player-controls-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(239, 68, 68, 0.06);
+            padding-top: 10px;
+            margin-top: 2px;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .status-active { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+        .status-blocked { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+
+        .btn-action-control {
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-block {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        .btn-block:hover { background: #ef4444; color: white; }
+
+        .btn-unblock {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+        .btn-unblock:hover { background: #10b981; color: white; }
+
+        /* --- PINNED BOTTOM NAVIGATION BAR --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(12, 4, 5, 0.94);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-premium);
+            padding: 10px 16px 14px 16px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 999;
+            box-shadow: 0 -8px 25px rgba(0,0,0,0.8);
+        }
+
+        .bottom-nav-item, .bottom-nav-logout-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .bottom-nav-item i, .bottom-nav-logout-btn i { 
+            font-size: 18px; 
+            opacity: 0.75;
+        }
+        
+        .bottom-nav-item.active { color: var(--accent-glow); }
+        .bottom-nav-item.active i { opacity: 1; filter: drop-shadow(0 0 6px var(--accent-glow)); }
+        
+        .bottom-nav-logout-btn { color: #f43f5e; }
+        .bottom-nav-logout-btn i { opacity: 1; }
+
+        /* --- CONFIRMATION DIALOG MODAL --- */
+        .logout-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(5, 1, 2, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            padding: 16px;
+        }
+
+        .logout-modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .logout-modal {
+            background: #140608;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.25s ease;
+        }
+
+        .logout-modal-overlay.active .logout-modal { transform: scale(1); }
+        .logout-icon-box { width: 54px; height: 54px; background: rgba(239, 68, 68, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; color: #ef4444; font-size: 20px; border: 1px solid rgba(239,68,68,0.2); }
+        .logout-modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+        .logout-modal p { color: var(--text-secondary); font-size: 13px; margin-bottom: 20px; }
+        
+        .modal-buttons { display: flex; gap: 10px; }
+        .btn-modal { flex: 1; padding: 12px; border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; border: none; }
+        .btn-cancel { background: rgba(255,255,255,0.06); color: white; border: 1px solid rgba(255,255,255,0.08); }
+        .btn-confirm-logout { background: #ef4444; color: white; }
+
+        /* --- TOAST NOTIFICATIONS --- */
+        .toast-container { position: fixed; top: 16px; left: 16px; right: 16px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; }
+        .toast {
+            background: rgba(20, 5, 6, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #ffffff;
+            padding: 14px 18px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .toast h4 { font-size: 13px; font-weight: 600; }
+        .toast p { font-size: 12px; color: #fca5a5; }
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="logout-modal-overlay" id="logoutModalOverlay">
+        <div class="logout-modal">
+            <div class="logout-icon-box"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3>Confirm Logout</h3>
+            <p>Are you sure you want to exit the admin station?</p>
+            <div class="modal-buttons">
+                <button class="btn-modal btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+                <button class="btn-modal btn-confirm-logout" onclick="executeLogout()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        
+        <header class="header">
+            <div>
+                <h1>Aviator Terminal</h1>
+                <p>Firestore Database Account Stream</p>
+            </div>
+            <div class="header-actions">
+                <a href="notification.html" class="btn-notify-access">
+                    <i class="fa-solid fa-bell"></i> Broadcast
+                </a>
+                <div class="user-profile">
+                    <i class="fa-solid fa-user-gear user-avatar"></i>
+                </div>
+            </div>
+        </header>
+
+        <section class="stats-container">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Net Liquidity</h3>
+                    <p id="netLiquidity">₹0.00</p>
+                </div>
+                <div class="stat-icon icon-premium"><i class="fa-solid fa-chart-line"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3>Total Deposits</h3>
+                    <p id="processedDeposits">₹0.00</p>
+                </div>
+                <div class="stat-icon icon-success"><i class="fa-solid fa-arrow-trend-up"></i></div>
+            </div>
+        </section>
+
+        <main class="content-card">
+            <div class="card-header">
+                <h2>Registered User Accounts</h2>
+            </div>
+            
+            <div class="player-list" id="playerListContainer">
+                <div style="text-align: center; color: var(--text-secondary); padding: 20px; font-size: 13px;">
+                    <i class="fa-solid fa-circle-notch fa-spin" style="margin-bottom: 8px; font-size: 18px; color: var(--accent-glow);"></i>
+                    <br>Connecting to Firestore collection stream...
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="#" class="bottom-nav-item active">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="deposit.html" class="bottom-nav-item">
+            <i class="fa-solid fa-wallet"></i>
+            <span>Deposit</span>
+        </a>
+        <a href="withdraw.html" class="bottom-nav-item">
+            <i class="fa-solid fa-money-bill-transfer"></i>
+            <span>Payout</span>
+        </a>
+        <button class="bottom-nav-logout-btn" onclick="openLogoutModal()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Exit</span>
+        </button>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDrAocFm8fnX2hJg2TyKQbmNe65C8ta4OA",
+            authDomain: "aviator-f562e.firebaseapp.com",
+            databaseURL: "https://aviator-f562e-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "aviator-f562e",
+            storageBucket: "aviator-f562e.firebasestorage.app",
+            messagingSenderId: "649327828612",
+            appId: "1:649327828612:web:f599fb22598002b6016cd1",
+            measurementId: "G-RHZ13ET692"
+        };
+
+        let rtdb, firestore;
+        try {
+            const app = initializeApp(firebaseConfig);
+            rtdb = getDatabase(app);
+            firestore = getFirestore(app);
+        } catch (err) {
+            window.showPremiumToast("System Error", "Initialization failure inside core SDK keys.");
+        }
+
+        // Metrics Calculator (RTDB Integration)
+        let dep = 0, wit = 0;
+        const updateMetrics = () => {
+            const liq = dep - wit;
+            document.getElementById('netLiquidity').innerText = `₹${liq.toLocaleString('en-IN', {minimumFractionDigits:2})}`;
+            document.getElementById('processedDeposits').innerText = `₹${dep.toLocaleString('en-IN', {minimumFractionDigits:2})}`;
+        };
+
+        onValue(ref(rtdb, 'deposits'), snap => {
+            let val = snap.val();
+            dep = typeof val === 'object' ? Object.values(val).reduce((a,b)=>a+Number(b.amount||b||0),0) : Number(val||0);
+            updateMetrics();
+        });
+        onValue(ref(rtdb, 'withdrawals'), snap => {
+            let val = snap.val();
+            wit = typeof val === 'object' ? Object.values(val).reduce((a,b)=>a+Number(b.amount||b||0),0) : Number(val||0);
+            updateMetrics();
+        });
+
+        // --- FIRESTORE USER LIVE SYNCHRONIZER ---
+        const userContainer = document.getElementById('playerListContainer');
+        
+        onSnapshot(collection(firestore, "users"), (snapshot) => {
+            if(snapshot.empty) {
+                userContainer.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding:20px; font-size:13px;">No registered accounts found in Firestore.</div>`;
+                return;
+            }
+
+            userContainer.innerHTML = '';
+            snapshot.forEach((docSnap) => {
+                const userId = docSnap.id;
+                const user = docSnap.data();
+                
+                const userFullName = user.fullName || "Unnamed User";
+                const userPhoneNumber = user.phone || "No Phone Provided";
+                const registeredDate = user.timestamp || user.dateJoined || "Recent Join";
+                const isBlocked = user.isBlocked || user.status === "Blocked" || false;
+
+                const rowCard = document.createElement('div');
+                rowCard.className = 'player-row-card';
+                
+                rowCard.innerHTML = `
+                    <div class="player-meta-top">
+                        <div class="player-identity">
+                            <h4>${userFullName}</h4>
+                            <p><i class="fa-solid fa-phone" style="font-size:10px; opacity:0.6; margin-right:4px;"></i>${userPhoneNumber}</p>
+                        </div>
+                        <div class="player-joined-date">${registeredDate}</div>
+                    </div>
+                    <div class="player-controls-bottom">
+                        <span class="status-badge ${isBlocked ? 'status-blocked' : 'status-active'}">
+                            ${isBlocked ? 'Blocked' : 'Active'}
+                        </span>
+                        <button class="btn-action-control ${isBlocked ? 'btn-unblock' : 'btn-block'}" 
+                                data-id="${userId}" data-blocked="${isBlocked}">
+                            ${isBlocked ? '<i class="fa-solid fa-unlock"></i> Unblock' : '<i class="fa-solid fa-ban"></i> Block'}
+                        </button>
+                    </div>
+                `;
+                userContainer.appendChild(rowCard);
+            });
+
+            // Re-assign administrative listeners dynamically
+            document.querySelectorAll('.btn-action-control').forEach(btn => {
+                btn.onclick = async (e) => {
+                    const targetId = btn.getAttribute('data-id');
+                    const currentlyBlocked = btn.getAttribute('data-blocked') === 'true';
+                    
+                    try {
+                        const docRef = doc(firestore, "users", targetId);
+                        await updateDoc(docRef, {
+                            isBlocked: !currentlyBlocked,
+                            status: !currentlyBlocked ? "Blocked" : "Active"
+                        });
+                    } catch(err) {
+                        window.showPremiumToast("Write Rejected", "Failed to modify user access configurations.");
+                    }
+                };
+            });
+
+        }, (error) => {
+            window.showPremiumToast("Firestore Connection Error", error.message);
+        });
+    </script>
+
+    <script>
+        function showPremiumToast(title, msg) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <i class="fa-solid fa-circle-exclamation" style="color:var(--accent-glow)"></i>
+                <div>
+                    <h4>${title}</h4>
+                    <p>${msg}</p>
+                </div>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        }
+
+        function openLogoutModal() { document.getElementById('logoutModalOverlay').classList.add('active'); }
+        function closeLogoutModal() { document.getElementById('logoutModalOverlay').classList.remove('active'); }
+        function executeLogout() { window.location.href = "../login.html"; }
+
+        window.showPremiumToast = showPremiumToast;
+    </script>
+</body>
+</html>

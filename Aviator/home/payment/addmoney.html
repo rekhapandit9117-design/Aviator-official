@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Deposit Station - Secure Pipeline</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-user: #0a0203;
+            --neon-red: #ff0037;
+            --neon-glow: rgba(255, 0, 55, 0.25);
+            --card-dark: rgba(22, 10, 11, 0.85);
+            --border-premium: rgba(239, 68, 68, 0.18);
+            --text-light: #ffffff;
+            --text-dim: #fca5a5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-user);
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(255, 0, 55, 0.15) 0%, transparent 60%),
+                radial-gradient(circle at 50% 90%, rgba(153, 27, 27, 0.12) 0%, transparent 60%);
+            background-attachment: fixed;
+            color: var(--text-light);
+            padding: 24px 16px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* --- NAVIGATION HEADER --- */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 16px;
+            border-bottom: 1px solid var(--border-premium);
+            padding-bottom: 18px;
+            margin-bottom: 28px;
+        }
+
+        .btn-back {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid var(--border-premium);
+            color: var(--text-light);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:active {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--neon-red);
+            transform: scale(0.95);
+        }
+
+        .page-title {
+            font-size: 1.35rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 900;
+            text-shadow: 0 0 20px var(--neon-glow);
+        }
+
+        .page-title span {
+            color: var(--neon-red);
+        }
+
+        /* --- DEPOSIT INTERFACE CARDS --- */
+        .deposit-card {
+            background: var(--card-dark);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-premium);
+            border-radius: 22px;
+            padding: 26px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .input-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+            display: block;
+            font-weight: 700;
+        }
+
+        .amount-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .currency-symbol {
+            position: absolute;
+            left: 18px;
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--neon-red);
+        }
+
+        .amount-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-premium);
+            border-radius: 14px;
+            padding: 18px 16px 18px 50px;
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: #ffffff;
+            outline: none;
+            cursor: default;
+        }
+
+        /* --- PRESET CHIP SELECTION GRID --- */
+        .amount-presets-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .preset-chip {
+            background: rgba(239, 68, 68, 0.04);
+            border: 1px solid var(--border-premium);
+            color: #ffffff;
+            padding: 15px 8px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .preset-chip:active {
+            transform: scale(0.95);
+        }
+
+        .preset-chip.selected {
+            background: rgba(255, 0, 55, 0.14);
+            border-color: var(--neon-red);
+            color: var(--neon-red);
+            box-shadow: 0 0 15px rgba(255, 0, 55, 0.2);
+        }
+
+        /* --- MAIN ACTION BUTTON --- */
+        .btn-action-deposit {
+            width: 100%;
+            background: linear-gradient(135deg, #ff0037 0%, #b91c1c 100%);
+            border: none;
+            color: white;
+            padding: 18px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow: 0 6px 25px rgba(255, 0, 55, 0.35);
+            transition: opacity 0.2s;
+        }
+
+        .btn-action-deposit:active {
+            opacity: 0.85;
+        }
+
+        /* --- PREMIUM ALERT WINDOW MODAL SYSTEM --- */
+        .premium-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(5, 1, 2, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            padding: 16px;
+        }
+
+        .premium-modal-overlay.active { 
+            opacity: 1; 
+            pointer-events: auto; 
+        }
+
+        .premium-modal {
+            background: #140608;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.25s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .premium-modal-overlay.active .premium-modal { 
+            transform: scale(1); 
+        }
+
+        .modal-icon-box { 
+            width: 56px; 
+            height: 56px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            margin: 0 auto 16px auto; 
+            font-size: 22px; 
+            background: rgba(239, 68, 68, 0.1); 
+            color: #ef4444; 
+            border: 1px solid rgba(239,68,68,0.25);
+        }
+
+        .premium-modal h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; letter-spacing: 0.3px; }
+        .premium-modal p { color: var(--text-dim); font-size: 13px; margin-bottom: 24px; line-height: 1.5; }
+        
+        .btn-modal-dismiss { 
+            width: 100%;
+            padding: 13px; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            font-size: 13px; 
+            cursor: pointer; 
+            border: none; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #ff0037 0%, #b91c1c 100%); 
+            color: white; 
+            box-shadow: 0 4px 15px rgba(255, 0, 55, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- STYLISH ERROR OVERLAY -->
+    <div class="premium-modal-overlay" id="customModalOverlay">
+        <div class="premium-modal">
+            <div class="modal-icon-box"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3 id="modalTitle">Selection Required</h3>
+            <p id="modalDescription">Please select one of the premium quick deposit amounts before proceeding.</p>
+            <button class="btn-modal-dismiss" onclick="closePremiumModal()">Dismiss</button>
+        </div>
+    </div>
+
+    <div class="app-container">
+
+        <!-- HEADER TRACK WITH DIRECT WALLET RETURN LINK -->
+        <header class="page-header">
+            <!-- Back button set explicitly to step directly up out of payment directory into home/wallet.html -->
+            <a href="../wallet.html" class="btn-back">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <h1 class="page-title">Add <span>Funds</span></h1>
+        </header>
+
+        <!-- CENTRAL WORKSTATION -->
+        <main class="deposit-card">
+            <div class="input-group">
+                <label class="input-label">Selected Deposit Amount</label>
+                <div class="amount-input-wrapper">
+                    <span class="currency-symbol">₹</span>
+                    <input type="number" class="amount-input" id="depositAmountField" placeholder="0.00" readonly>
+                </div>
+            </div>
+
+            <!-- CHIP CHOOSER GRID -->
+            <label class="input-label" style="margin-bottom: 12px;">Quick Select Amount</label>
+            <div class="amount-presets-grid">
+                <div class="preset-chip" data-val="100">+ ₹100</div>
+                <div class="preset-chip" data-val="200">+ ₹200</div>
+                <div class="preset-chip" data-val="300">+ ₹300</div>
+                <div class="preset-chip" data-val="500">+ ₹500</div>
+                <div class="preset-chip" data-val="1000">+ ₹1000</div>
+                <div class="preset-chip" data-val="5000">+ ₹5000</div>
+            </div>
+
+        <button class="btn-action-deposit" onclick="executeDepositPipeline()">Add Funds</button>
+        </main>
+
+    </div>
+
+    <!-- CORE SCRIPTS -->
+    <script>
+        const inputField = document.getElementById('depositAmountField');
+        const chips = document.querySelectorAll('.preset-chip');
+        const overlay = document.getElementById('customModalOverlay');
+
+        // Preset Chip Assignment Logic
+        chips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                chips.forEach(c => c.classList.remove('selected'));
+                chip.classList.add('selected');
+                inputField.value = chip.getAttribute('data-val');
+            });
+        });
+
+        function showPremiumModal() {
+            overlay.classList.add('active');
+        }
+
+        function closePremiumModal() {
+            overlay.classList.remove('active');
+        }
+
+        function executeDepositPipeline() {
+            const amount = parseFloat(inputField.value);
+            if (!amount || amount <= 0) {
+                showPremiumModal();
+                return;
+            }
+
+            // Redirect directly over to scanner
+            window.location.href = `paymentscanner.html?amount=${amount}`;
+        }
+    </script>
+</body>
+</html>

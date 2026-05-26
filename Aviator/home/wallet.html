@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aviator Premium - Wallet Ledger</title>
+    <style>
+        :root {
+            --bg-pure: #030002;
+            --neon-red: #ff0037;
+            --neon-red-glow: rgba(255, 0, 55, 0.45);
+            --neon-red-dim: rgba(255, 0, 55, 0.15);
+            --glass-card: rgba(18, 5, 8, 0.6);
+            --glass-border: rgba(255, 0, 55, 0.18);
+            --text-main: #ffffff;
+            --text-muted: #a69fa3;
+            --premium-gold: #ffb700;
+            --success-green: #00e676;
+            --success-glow: rgba(0, 230, 118, 0.2);
+            --warning-yellow: #ffb700;
+            --warning-glow: rgba(255, 183, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cabinet Grotesk', 'Segoe UI', system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-pure);
+            background-image: 
+                radial-gradient(circle at 50% -10%, rgba(255, 0, 55, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 10% 80%, rgba(255, 0, 55, 0.1) 0%, transparent 40%),
+                linear-gradient(180deg, #050002 0%, #0c0104 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            padding-bottom: 85px;
+        }
+
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: rgba(5, 0, 2, 0.85);
+            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .brand-header {
+            font-size: 1.3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-header svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--neon-red);
+            stroke-width: 2;
+            fill: none;
+            filter: drop-shadow(0 0 6px var(--neon-red));
+        }
+
+        .premium-tag {
+            font-size: 0.6rem;
+            background: linear-gradient(135deg, var(--premium-gold), #ff5500);
+            color: #000;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-weight: 900;
+        }
+
+        .vault-container {
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            flex: 1;
+        }
+
+        .grand-balance-module {
+            background: radial-gradient(circle at top left, rgba(255, 0, 55, 0.1), transparent), var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 28px 24px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .balance-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .balance-figure {
+            font-size: 2.6rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .balance-figure span {
+            color: var(--neon-red);
+            text-shadow: 0 0 15px var(--neon-red-glow);
+        }
+
+        .action-button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .action-btn {
+            border: none;
+            border-radius: 18px;
+            padding: 16px 10px;
+            font-size: 0.85rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-add {
+            background: var(--neon-red);
+            color: #ffffff;
+            box-shadow: 0 4px 20px var(--neon-red-glow);
+        }
+
+        .btn-add:active {
+            transform: scale(0.96);
+            box-shadow: 0 2px 10px var(--neon-red-glow);
+        }
+
+        .btn-withdraw {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-withdraw:active {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0.96);
+        }
+
+        .action-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            fill: none;
+        }
+
+        .ledger-block-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-main);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .ledger-block-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 14px;
+            background: var(--neon-red);
+            box-shadow: 0 0 8px var(--neon-red);
+            border-radius: 2px;
+        }
+
+        .history-timeline-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .history-card {
+            background: var(--glass-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: border-color 0.3s ease;
+        }
+
+        .history-card-left {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .history-type-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .history-type-label {
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-pending {
+            background: rgba(255, 183, 0, 0.12);
+            color: var(--premium-gold);
+            border: 1px solid rgba(255, 183, 0, 0.25);
+            box-shadow: 0 0 8px rgba(255, 183, 0, 0.1);
+        }
+
+        .badge-success {
+            background: rgba(0, 230, 118, 0.12);
+            color: var(--success-green);
+            border: 1px solid rgba(0, 230, 118, 0.25);
+            box-shadow: 0 0 8px rgba(0, 230, 118, 0.1);
+        }
+
+        .badge-rejected {
+            background: rgba(255, 0, 55, 0.12);
+            color: var(--neon-red);
+            border: 1px solid rgba(255, 0, 55, 0.25);
+        }
+
+        .history-timestamp {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .history-amount-flag {
+            font-size: 1.1rem;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+
+        .tx-deposit { border-left: 4px solid var(--success-green); }
+        .tx-deposit .history-amount-flag { color: var(--success-green); }
+        
+        .tx-withdraw { border-left: 4px solid var(--neon-red); }
+        .tx-withdraw .history-amount-flag { color: var(--neon-red); }
+
+        .empty-history-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            background: rgba(5, 1, 2, 0.3);
+        }
+
+        .bottom-navigation-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 72px;
+            background: rgba(4, 0, 2, 0.94);
+            border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+            padding: 0 10px;
+            box-shadow: 0 -5px 35px rgba(0, 0, 0, 0.8);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            gap: 6px;
+            flex: 1;
+            height: 100%;
+        }
+
+        .nav-item.active { color: #ffffff; }
+
+        .nav-icon-container {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-icon-container svg {
+            width: 100%;
+            height: 100%;
+            stroke: var(--text-muted);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .nav-item.active .nav-icon-container svg {
+            stroke: var(--neon-red);
+            filter: drop-shadow(0 0 6px var(--neon-red-glow));
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="brand-header">
+            <svg viewBox="0 0 24 24">
+                <path d="M6 3h12l4 6-10 12L2 9z"/>
+            </svg>
+            VAULT <div class="premium-tag">LIVE</div>
+        </div>
+    </header>
+
+    <main class="vault-container">
+        
+        <section class="grand-balance-module">
+            <p class="balance-label">Current Assets Balance</p>
+            <h1 class="balance-figure"><span>₹</span><span id="liveWalletBalanceNode">0.00</span></h1>
+        </section>
+
+        <section class="action-button-grid">
+            <button class="action-btn btn-add" id="routeAddMoneyBtn">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+                Add Money
+            </button>
+            <button class="action-btn btn-withdraw" id="routeWithdrawBtn">
+                <svg viewBox="0 0 24 24"><path d="M5 12h14" stroke-linecap="round"/></svg>
+                Withdraw
+            </button>
+        </section>
+
+        <section>
+            <h3 class="ledger-block-title">Activity Logs</h3>
+            <div class="history-timeline-panel" id="ledgerHistoryContainer">
+                <div class="empty-history-state">Establishing handshake verification metrics context...</div>
+            </div>
+        </section>
+
+    </main>
+
+    <nav class="bottom-navigation-bar">
+        <a href="dashboard.html" class="nav-item">
+            <div class="nav-icon-container">
+                <svg viewBox="0 0 24 24">
+                    <rect x="2" y="6" width="20" height="12" rx="3" />
+                    <path d="M6 12h4M8 10v4" stroke-width="2.5"/>
+                </svg>
+            </div>
+            <span>Console</span>
+        </a>
+        <a href="history.html" class="nav-item">
+            <div class="nav-icon-container">
+                <svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            </div>
+            <span>RANKS</span>
+        </a>
+        <a href="wallet.html" class="nav-item active">
+            <div class="nav-icon-container">
+                <svg viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 12L2 9z"/></svg>
+            </div>
+            <span>Vault</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <div class="nav-icon-container">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+            </div>
+            <span>Network</span>
+        </a>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, collection, onSnapshot, query, orderBy, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDrAocFm8fnX2hJg2TyKQbmNe65C8ta4OA",
+            authDomain: "aviator-f562e.firebaseapp.com",
+            databaseURL: "https://aviator-f562e-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "aviator-f562e",
+            storageBucket: "aviator-f562e.firebasestorage.app",
+            messagingSenderId: "649327828612",
+            appId: "1:649327828612:web:f599fb22598002b6016cd1",
+            measurementId: "G-RHZ13ET692"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const balanceDisplay = document.getElementById('liveWalletBalanceNode');
+        const historyContainer = document.getElementById('ledgerHistoryContainer');
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                bindLiveWalletBalance(user.uid);
+                bindLiveTransactionHistory(user.uid);
+            } else {
+                alert("Session context missing. Routing to secure validation portal...");
+                window.location.href = "login.html";
+            }
+        });
+
+        document.getElementById('routeAddMoneyBtn').addEventListener('click', () => {
+            window.location.href = "payment/addmoney.html";
+        });
+
+        document.getElementById('routeWithdrawBtn').addEventListener('click', () => {
+            window.location.href = "payment/withdraw.html";
+        });
+
+        function bindLiveWalletBalance(uid) {
+            const userDocRef = doc(db, "users", uid);
+            onSnapshot(userDocRef, (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    const data = docSnapshot.data();
+                    const val = data.balance; 
+                    const numericBalance = val !== undefined ? parseFloat(val) : 0.00;
+                    
+                    balanceDisplay.textContent = numericBalance.toLocaleString('en-IN', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                } else {
+                    balanceDisplay.textContent = "0.00";
+                }
+            }, (error) => {
+                console.error("Error listening to balance changes: ", error);
+            });
+        }
+
+        function bindLiveTransactionHistory(uid) {
+            const historyCollectionRef = collection(db, "users", uid, "history");
+            const historyQuery = query(historyCollectionRef, orderBy("timestamp", "desc"));
+            
+            onSnapshot(historyQuery, (querySnapshot) => {
+                historyContainer.innerHTML = ""; 
+                let visibleLogsCount = 0;
+                let totalDocsProcessed = 0;
+
+                querySnapshot.forEach((txDoc) => {
+                    totalDocsProcessed++;
+
+                    // Automatically delete transactions older than the 15th
+                    if (totalDocsProcessed > 15) {
+                        deleteDoc(txDoc.ref).catch(err => console.error("Error deleting old history: ", err));
+                        return; // Skip rendering this document
+                    }
+
+                    const tx = txDoc.data();
+                    
+                    if (tx.note && (tx.note.includes("Aviator") || tx.note.includes("Bet"))) {
+                        return; 
+                    }
+
+                    visibleLogsCount++;
+
+                    const card = document.createElement('div');
+                    const txType = tx.type ? tx.type.toLowerCase() : 'deposit'; 
+                    card.className = `history-card tx-${txType}`;
+                    
+                    const currentStatus = tx.status ? tx.status.toLowerCase() : 'success';
+
+                    let statusBadgeHtml = "";
+                    if (currentStatus === "pending") {
+                        statusBadgeHtml = `<span class="status-badge badge-pending">Pending</span>`;
+                    } else if (currentStatus === "success" || currentStatus === "approve" || currentStatus === "approved") {
+                        statusBadgeHtml = `<span class="status-badge badge-success">Success</span>`;
+                    } else {
+                        statusBadgeHtml = `<span class="status-badge badge-rejected">Failed</span>`;
+                    }
+
+                    let rawTimestamp = tx.timestamp;
+                    if (rawTimestamp && typeof rawTimestamp.toDate === 'function') {
+                        rawTimestamp = rawTimestamp.toDate();
+                    }
+
+                    const formattedDate = rawTimestamp ? new Date(rawTimestamp).toLocaleString('en-IN', {
+                        dateStyle: 'medium',
+                        timeStyle: 'short'
+                    }) : "No timestamp signature";
+
+                    const prefixSymbol = txType === 'deposit' ? '+' : '-';
+                    const displayAmt = parseFloat(tx.amount || 0).toFixed(2);
+
+                    card.innerHTML = `
+                        <div class="history-card-left">
+                            <div class="history-type-row">
+                                <span class="history-type-label">${txType === 'deposit' ? 'Wallet Refill' : 'Vault Payout'}</span>
+                                ${statusBadgeHtml}
+                            </div>
+                            <span class="history-timestamp">${formattedDate}</span>
+                        </div>
+                        <div class="history-amount-flag">${prefixSymbol} ₹${displayAmt}</div>
+                    `;
+                    
+                    historyContainer.appendChild(card);
+                });
+
+                if (visibleLogsCount === 0) {
+                    historyContainer.innerHTML = `<div class="empty-history-state">No transaction logs recorded in current ledger scope.</div>`;
+                }
+
+            }, (error) => {
+                console.error("Error listening to transaction history changes: ", error);
+                historyContainer.innerHTML = `<div class="empty-history-state">Error synchronizing ledger streaming pipeline.</div>`;
+            });
+        }
+    </script>
+</body>
+</html>

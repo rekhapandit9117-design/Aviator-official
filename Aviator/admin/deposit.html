@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Transaction Ledger Console</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #080202;
+            --bg-secondary: #120505;
+            --bg-surface: #1c0a0a;
+            --accent-color: #ff2a2a;
+            --accent-hover: #ff5555;
+            --accent-glow: rgba(255, 42, 42, 0.6);
+            --text-primary: #ffebeb;
+            --text-secondary: #a88787;
+            --status-pending: #f59e0b;
+            --status-approved: #10b981;
+            --status-failed: #ef4444;
+            --border-color: #2d1212;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding-bottom: 80px; /* Space for the bottom navigation bar */
+        }
+
+        /* Top Header Navigation */
+        header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(255, 42, 42, 0.05);
+        }
+
+        .brand-header {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-primary);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .brand-header i {
+            color: var(--accent-color);
+        }
+
+        /* Main Workspace */
+        main {
+            padding: 30px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .workspace-header {
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .workspace-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+            text-shadow: 0 0 8px rgba(255, 42, 42, 0.3);
+        }
+
+        .workspace-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Analytics Overview Row */
+        .analytics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .metric-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .metric-info h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .metric-info .value {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .metric-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .metric-card.pending .metric-icon-box {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--status-pending);
+        }
+
+        .metric-card.approved .metric-icon-box {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--status-approved);
+        }
+
+        /* Data Matrix Section */
+        .data-matrix-container {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+
+        .matrix-title-bar {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: rgba(28, 10, 10, 0.5);
+        }
+
+        .matrix-title-bar h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .master-data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        .master-data-table th {
+            background-color: rgba(28, 10, 10, 0.8);
+            padding: 16px 24px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .master-data-table td {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        .master-data-table tbody tr:hover {
+            background-color: rgba(255, 42, 42, 0.02);
+        }
+
+        /* System Badges & Indicators */
+        .user-id {
+            font-family: monospace;
+            background-color: var(--bg-surface);
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            cursor: help;
+        }
+
+        .utr-text {
+            font-family: monospace;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .amount-badge {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.badge-pending {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--status-pending);
+        }
+
+        .status-badge.badge-approved {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--status-approved);
+        }
+
+        .status-badge.badge-failed {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: var(--status-failed);
+        }
+
+        /* Table Action Layouts */
+        .action-cell {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-approve {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--status-approved);
+        }
+
+        .btn-approve:hover:not(:disabled) {
+            background-color: var(--status-approved);
+            color: white;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-reject {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--status-failed);
+        }
+
+        .btn-reject:hover:not(:disabled) {
+            background-color: var(--status-failed);
+            color: white;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-action:disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 0;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            display: block;
+            color: var(--border-color);
+        }
+
+        /* Bottom Fixed Navigation Bar (Matches uploaded photo layout exactly) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 68px;
+            background-color: #0b0202;
+            border-top: 1px solid #230808;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            z-index: 999;
+            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.8);
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #f75555;
+            text-decoration: none;
+            gap: 5px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .bottom-nav-item i {
+            font-size: 1.35rem;
+            transition: transform 0.2s ease;
+        }
+
+        /* Active Glow State (Home / Deposit Context Accentuation) */
+        .bottom-nav-item.active {
+            color: #ff1a1a;
+            text-shadow: 0 0 12px var(--accent-glow);
+        }
+        
+        .bottom-nav-item.active i {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 6px var(--accent-color));
+        }
+
+        .bottom-nav-item:hover {
+            color: var(--text-primary);
+        }
+
+        /* Modal Subsystem Overlays */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .premium-modal-wrapper {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            width: 90%;
+            max-width: 450px;
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 42, 42, 0.1);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.open .premium-modal-wrapper {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            width: 64px;
+            height: 64px;
+            background-color: rgba(255, 42, 42, 0.1);
+            color: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 0 15px rgba(255, 42, 42, 0.2);
+        }
+
+        .modal-icon.icon-success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--status-approved);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .premium-modal-wrapper h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .premium-modal-wrapper p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+
+        .modal-action-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+        }
+
+        .modal-btn-cancel {
+            background-color: var(--bg-surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-btn-cancel:hover {
+            background-color: var(--border-color);
+        }
+
+        .modal-btn-confirm {
+            background-color: var(--accent-color);
+            color: white;
+            box-shadow: 0 0 10px rgba(255, 42, 42, 0.3);
+        }
+
+        .modal-btn-confirm:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .modal-btn-success {
+            background-color: var(--status-approved);
+            color: white;
+        }
+
+        .modal-btn-success:hover {
+            background-color: #0d9488;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-header">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Admin Terminal Control</span>
+        </div>
+    </header>
+
+    <main>
+        <div class="workspace-header">
+            <h1>Deposit Manifest Sync</h1>
+            <p>Real-time cross-network incoming deposit auditing terminal</p>
+        </div>
+
+        <div class="analytics-row">
+            <div class="metric-card pending">
+                <div class="metric-info">
+                    <h3>Awaiting Audit</h3>
+                    <div class="value" id="pendingCounter">0</div>
+                </div>
+                <div class="metric-icon-box">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+            </div>
+            <div class="metric-card approved">
+                <div class="metric-info">
+                    <h3>Settled Chains</h3>
+                    <div class="value" id="approvedCounter">0</div>
+                </div>
+                <div class="metric-icon-box">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-matrix-container">
+            <div class="matrix-title-bar">
+                <h2>Inbound Logs Database</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="master-data-table">
+                    <thead>
+                        <tr>
+                            <th>Verification Date</th>
+                            <th>User Reference</th>
+                            <th>Transaction UID</th>
+                            <th>Bank Network UTR</th>
+                            <th>Value Amount</th>
+                            <th>Status Flag</th>
+                            <th>Operations Matrix</th>
+                        </tr>
+                    </thead>
+                    <tbody id="masterLogBody">
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                <i class="fa-solid fa-circle-notch fa-spin"></i>
+                                <p>Establishing synchronous secure pipeline stream...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="adminhome.html" 
+        class="bottom-nav-item">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="withdraw.html" class="bottom-nav-item active">
+            <i class="fa-solid fa-wallet"></i>
+            <span>Deposit</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <i class="fa-solid fa-money-bill-transfer"></i>
+            <span>Payout</span>
+        </a>
+        <button class="bottom-nav-item" id="exitBottomBtn">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Exit</span>
+        </button>
+    </nav>
+
+    <div class="modal-overlay" id="globalModalOverlay">
+        <div class="premium-modal-wrapper">
+            <div class="modal-icon" id="modalIcon">
+                <i class="fa-solid fa-circle-question"></i>
+            </div>
+            <h2 id="modalTitle">Structural System Prompt</h2>
+            <p id="modalDescription">System placeholder configuration description parameters.</p>
+            <div class="modal-action-footer">
+                <button class="modal-btn modal-btn-cancel" id="modalCancelBtn">Cancel</button>
+                <button class="modal-btn modal-btn-confirm" id="modalConfirmBtn">Confirm Action</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collectionGroup, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDrAocFm8fnX2hJg2TyKQbmNe65C8ta4OA",
+            authDomain: "aviator-f562e.firebaseapp.com",
+            databaseURL: "https://aviator-f562e-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "aviator-f562e",
+            storageBucket: "aviator-f562e.firebasestorage.app",
+            messagingSenderId: "649327828612",
+            appId: "1:649327828612:web:f599fb22598002b6016cd1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const modalOverlay = document.getElementById('globalModalOverlay');
+        const modalIcon = document.getElementById('modalIcon');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalCancelBtn = document.getElementById('modalCancelBtn');
+        const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+        const exitBottomBtn = document.getElementById('exitBottomBtn');
+
+        function displayPremiumModal({ title, message, iconClass, isAlert, type, onConfirm }) {
+            modalTitle.textContent = title;
+            modalDescription.textContent = message;
+            
+            modalIcon.className = "modal-icon";
+            if (type === "success") modalIcon.classList.add('icon-success');
+            modalIcon.innerHTML = `<i class="${iconClass}"></i>`;
+
+            const newConfirm = modalConfirmBtn.cloneNode(true);
+            const newCancel = modalCancelBtn.cloneNode(true);
+            modalConfirmBtn.replaceWith(newConfirm);
+            modalCancelBtn.replaceWith(newCancel);
+
+            if (isAlert) {
+                newCancel.style.display = 'none';
+            } else {
+                newCancel.style.display = 'block';
+                newCancel.textContent = "Cancel";
+            }
+
+            newConfirm.className = "modal-btn";
+            if (type === "success") {
+                newConfirm.classList.add('modal-btn-success');
+                newConfirm.textContent = "Dismiss";
+            } else {
+                newConfirm.classList.add('modal-btn-confirm');
+                newConfirm.textContent = type === "exit" ? "Log Out" : "Process Action";
+            }
+
+            newConfirm.addEventListener('click', () => {
+                modalOverlay.classList.remove('open');
+                if (onConfirm) onConfirm();
+            });
+
+            newCancel.addEventListener('click', () => {
+                modalOverlay.classList.remove('open');
+            });
+
+            window.modalConfirmBtn = newConfirm;
+            window.modalCancelBtn = newCancel;
+
+            modalOverlay.classList.add('open');
+        }
+
+        modalOverlay.addEventListener('click', (e) => {
+            const currentCancelBtn = document.getElementById('modalCancelBtn') || window.modalCancelBtn;
+            if (e.target === modalOverlay && currentCancelBtn && currentCancelBtn.style.display !== 'none') {
+                modalOverlay.classList.remove('open');
+            }
+        });
+
+        exitBottomBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            displayPremiumModal({
+                title: "Terminate Session",
+                message: "Are you sure you want to securely log out and disconnect from the active system ledger console?",
+                iconClass: "fa-solid fa-triangle-exclamation",
+                isAlert: false,
+                type: "exit",
+                onConfirm: () => {
+                    window.location.href = window.location.origin + '/login.html';
+                }
+            });
+        });
+
+        function startLiveGlobalListener() {
+            const historyQuery = collectionGroup(db, "history");
+
+            onSnapshot(historyQuery, (snapshot) => {
+                const logs = [];
+                let totalPending = 0;
+                let totalApproved = 0;
+
+                snapshot.forEach((documentSnapshot) => {
+                    const data = documentSnapshot.data();
+                    
+                    if (data.type === "deposit") {
+                        const pathSegments = documentSnapshot.ref.path.split('/');
+                        const calculatedUid = pathSegments[1];
+                        
+                        logs.push({
+                            id: documentSnapshot.id,
+                            ref: documentSnapshot.ref,
+                            userId: calculatedUid,
+                            ...data
+                        });
+
+                        if(data.status === "pending") totalPending++;
+                        if(data.status === "approved" || data.status === "success") totalApproved++;
+                    }
+                });
+
+                document.getElementById('pendingCounter').textContent = totalPending;
+                document.getElementById('approvedCounter').textContent = totalApproved;
+
+                logs.sort((x, y) => {
+                    const timeX = x.timestamp ? x.timestamp.toMillis() : Date.now();
+                    const timeY = y.timestamp ? y.timestamp.toMillis() : Date.now();
+                    return timeY - timeX;
+                });
+
+                renderTableInterface(logs);
+            }, (error) => {
+                console.error("Sync Error:", error);
+            });
+        }
+
+        function renderTableInterface(dataset) {
+            const tbody = document.getElementById('masterLogBody');
+            if(dataset.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty-state">
+                            <i class="fa-solid fa-folder-open"></i>
+                            <p>No deposit log entries found across runtime memory branches.</p>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tbody.innerHTML = "";
+
+            dataset.forEach((entry) => {
+                const row = document.createElement('tr');
+                
+                let calendarString = "Processing...";
+                if (entry.timestamp) {
+                    const dateInstance = entry.timestamp.toDate();
+                    calendarString = dateInstance.toLocaleDateString() + ' ' + dateInstance.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                }
+
+                let badgeClass = "badge-pending";
+                if(entry.status === "approved" || entry.status === "success") badgeClass = "badge-approved";
+                if(entry.status === "failed") badgeClass = "badge-failed";
+
+                const isInteractive = entry.status === "pending";
+                const cleanAmount = Number(entry.amount || 0);
+
+                row.innerHTML = `
+                    <td style="color: var(--text-secondary); font-size: 0.85rem;">${calendarString}</td>
+                    <td><span class="user-id" title="${entry.userId}">${entry.userId ? entry.userId.substring(0,8) : 'N/A'}...</span></td>
+                    <td style="font-size:0.85rem; color: var(--text-secondary); font-family: monospace;">${entry.id}</td>
+                    <td><span class="utr-text">${entry.utr || 'N/A'}</span></td>
+                    <td><span class="amount-badge">₹${cleanAmount.toFixed(2)}</span></td>
+                    <td><span class="status-badge ${badgeClass}">${entry.status}</span></td>
+                    <td class="action-cell">
+                        <button class="btn-action btn-approve" ${!isInteractive ? 'disabled' : ''}>
+                            <i class="fa-solid fa-check"></i> Approve
+                        </button>
+                        <button class="btn-action btn-reject" ${!isInteractive ? 'disabled' : ''}>
+                            <i class="fa-solid fa-xmark"></i> Decline
+                        </button>
+                    </td>
+                `;
+
+                if(isInteractive) {
+                    const approveBtn = row.querySelector('.btn-approve');
+                    const rejectBtn = row.querySelector('.btn-reject');
+                    
+                    approveBtn.addEventListener('click', () => processTransactionAction(entry.userId, entry.id, "approved", cleanAmount));
+                    rejectBtn.addEventListener('click', () => processTransactionAction(entry.userId, entry.id, "failed", 0));
+                }
+
+                tbody.appendChild(row);
+            });
+        }
+
+        async function processTransactionAction(targetUid, targetTxId, targetedStatus, allocationValue) {
+            displayPremiumModal({
+                title: "Confirm Update",
+                message: `Are you absolutely sure you want to change the status of transaction ${targetTxId} to ${targetedStatus.toUpperCase()}?`,
+                iconClass: "fa-solid fa-circle-question",
+                isAlert: false,
+                type: "confirm",
+                onConfirm: async () => {
+                    const transactionRef = doc(db, "users", targetUid, "history", targetTxId);
+
+                    try {
+                        if (targetedStatus === "approved") {
+                            await updateDoc(transactionRef, { status: "approved" });
+                            
+                            displayPremiumModal({
+                                title: "Action Successful",
+                                message: "Transaction approved! Ledger status modified safely without altering balance profiles.",
+                                iconClass: "fa-solid fa-circle-check",
+                                isAlert: true,
+                                type: "success"
+                            });
+                        } else {
+                            await updateDoc(transactionRef, { status: "failed" });
+                            
+                            displayPremiumModal({
+                                title: "Trace Declined",
+                                message: "Deposit transaction record has been successfully updated to failed status.",
+                                iconClass: "fa-solid fa-circle-check",
+                                isAlert: true,
+                                type: "success"
+                            });
+                        }
+                    } catch (err) {
+                        console.error("Action Execution Crash:", err);
+                        displayPremiumModal({
+                            title: "Operation Failed",
+                            message: "Processing error encountered: " + err.message,
+                            iconClass: "fa-solid fa-circle-exclamation",
+                            isAlert: true,
+                            type: "confirm"
+                        });
+                    }
+                }
+            });
+        }
+
+        startLiveGlobalListener();
+    </script>
+</body>
+</html>

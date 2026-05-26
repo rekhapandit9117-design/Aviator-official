@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aviator Premium - Support Hub</title>
+    <style>
+        :root {
+            --bg-pure: #030002;
+            --neon-red: #ff0037;
+            --neon-red-glow: rgba(255, 0, 55, 0.45);
+            --neon-red-dim: rgba(255, 0, 55, 0.15);
+            --glass-card: rgba(18, 5, 8, 0.6);
+            --glass-border: rgba(255, 0, 55, 0.18);
+            --text-main: #ffffff;
+            --text-muted: #a69fa3;
+            --premium-gold: #ffb700;
+            --success-green: #00e676;
+            --whatsapp-green: #25d366;
+            --whatsapp-glow: rgba(37, 211, 102, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cabinet Grotesk', 'Segoe UI', system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-pure);
+            background-image: 
+                radial-gradient(circle at 50% -10%, rgba(255, 0, 55, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 10% 30%, rgba(255, 0, 55, 0.08) 0%, transparent 40%),
+                linear-gradient(180deg, #050002 0%, #0c0104 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            padding-bottom: 95px;
+        }
+
+        /* Top Bar Layout */
+        .top-navbar {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: rgba(5, 0, 2, 0.85);
+            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .back-nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-right: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .back-nav-link:active {
+            background: var(--neon-red-dim);
+            border-color: var(--neon-red);
+            color: #ffffff;
+        }
+
+        .brand-header {
+            font-size: 1.1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Core Structure Container */
+        .support-container {
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+        }
+
+        /* Matrix Hero Banner */
+        .support-hero {
+            background: radial-gradient(circle at bottom left, rgba(255, 0, 55, 0.1), transparent), var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 28px 24px;
+            text-align: left;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .support-hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: var(--neon-red);
+            filter: blur(90px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .hero-accent-tag {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--premium-gold);
+            font-weight: 800;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .hero-main-title {
+            font-size: 1.6rem;
+            font-weight: 900;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            background: linear-gradient(180deg, #ffffff 0%, #a69fa3 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Support Channels Deck */
+        .support-channels-deck {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .channel-card-anchor {
+            background: var(--glass-card);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .channel-card-anchor:active {
+            transform: scale(0.98);
+        }
+
+        /* Specific Brand Color Shifts On Press */
+        .channel-card-anchor.telegram-type:active {
+            border-color: var(--glass-border);
+            background: linear-gradient(135deg, rgba(255, 0, 55, 0.04), transparent), var(--glass-card);
+        }
+
+        .channel-card-anchor.whatsapp-type:active {
+            border-color: rgba(37, 211, 102, 0.25);
+            background: linear-gradient(135deg, rgba(37, 211, 102, 0.04), transparent), var(--glass-card);
+        }
+
+        .channel-info-cluster {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .channel-icon-frame {
+            width: 46px;
+            height: 46px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .telegram-type .channel-icon-frame { color: var(--neon-red); }
+        .whatsapp-type .channel-icon-frame { color: var(--whatsapp-green); }
+
+        .telegram-type:active .channel-icon-frame {
+            color: #ffffff;
+            background: var(--neon-red);
+            box-shadow: 0 0 15px var(--neon-red-glow);
+            border-color: transparent;
+        }
+
+        .whatsapp-type:active .channel-icon-frame {
+            color: #ffffff;
+            background: var(--whatsapp-green);
+            box-shadow: 0 0 15px var(--whatsapp-glow);
+            border-color: transparent;
+        }
+
+        .channel-text-frame {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .channel-title-string {
+            font-size: 0.95rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .channel-status-string {
+            font-size: 0.72rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot-active {
+            width: 6px;
+            height: 6px;
+            background-color: var(--success-green);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px var(--success-green);
+        }
+
+        .status-text-live {
+            color: var(--success-green);
+        }
+
+        .arrow-action-indicator {
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Floating Toast Notification Center */
+        .toast-notification-center {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-30px);
+            width: calc(100% - 32px);
+            max-width: 380px;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast-notification-center.display-active {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .premium-toast-box {
+            padding: 16px 20px;
+            border-radius: 18px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .premium-toast-box.type-error {
+            background: rgba(18, 2, 6, 0.92);
+            border: 1px solid var(--neon-red);
+            box-shadow: 0 0 25px rgba(255, 0, 55, 0.2), 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .premium-toast-box.type-success {
+            background: rgba(2, 18, 10, 0.92);
+            border: 1px solid var(--success-green);
+            box-shadow: 0 0 25px rgba(0, 230, 118, 0.15), 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .toast-status-icon-frame {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .toast-status-icon-frame svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .type-error .toast-status-icon-frame svg { stroke: var(--neon-red); }
+        .type-success .toast-status-icon-frame svg { stroke: var(--success-green); }
+
+        .toast-message-string {
+            font-size: 0.88rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toast-notification-center" id="globalToastHub">
+        <div class="premium-toast-box type-error" id="toastVisualBlock">
+            <div class="toast-status-icon-frame" id="toastIconSlot"></div>
+            <div class="toast-message-string" id="toastMessageSlot">Syncing secure modules...</div>
+        </div>
+    </div>
+
+    <header class="top-navbar">
+        <a href="profile.html" class="back-nav-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </a>
+        <div class="brand-header">Support Center</div>
+    </header>
+
+    <main class="support-container">
+
+        <section class="support-hero">
+            <span class="hero-accent-tag">Premium Matrix</span>
+            <h2 class="hero-main-title">How can we help<br>your operation?</h2>
+        </section>
+
+        <section class="support-channels-deck">
+            
+            <a href="https://t.me/+MbD_jN1NvmczNjE9" target="_blank" class="channel-card-anchor telegram-type">
+                <div class="channel-info-cluster">
+                    <div class="channel-icon-frame">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    </div>
+                    <div class="channel-text-frame">
+                        <span class="channel-title-string">Telegram Channel</span>
+                        <div class="channel-status-string">
+                            <span class="status-dot-active"></span>
+                            <span class="status-text-live">Instant Response Live</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="arrow-action-indicator">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+            </a>
+
+            <a href="https://chat.whatsapp.com/JwOrKoXxGXcGB96S5ypOty" target="_blank" class="channel-card-anchor whatsapp-type" id="whatsappSupportLink">
+                <div class="channel-info-cluster">
+                    <div class="channel-icon-frame">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                        </svg>
+                    </div>
+                    <div class="channel-text-frame">
+                        <span class="channel-title-string">WhatsApp Support</span>
+                        <div class="channel-status-string">
+                            <span class="status-dot-active"></span>
+                            <span class="status-text-live">24/7 Secure Verification</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="arrow-action-indicator">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+            </a>
+
+        </section>
+
+    </main>
+
+    <script>
+        // Real-time Premium Network Status Listeners
+        window.addEventListener('offline', () => {
+            dispatchPremiumToast("Hardware Link Disconnected. Sync stream offline.", "error");
+        });
+
+        window.addEventListener('online', () => {
+            dispatchPremiumToast("Hardware Link Restored. Node lines active.", "success");
+        });
+
+        // Trigger safe user warning system if clicking support routes while completely disconnected
+        document.querySelectorAll('.channel-card-anchor').forEach(anchor => {
+            anchor.addEventListener('click', (e) => {
+                if(!navigator.onLine) {
+                    e.preventDefault();
+                    dispatchPremiumToast("Cannot initiate link breakout while offline.", "error");
+                }
+            });
+        });
+
+        // UI Toast Controller Module Engine
+        let toastTimeoutPointer = null;
+        function dispatchPremiumToast(message, type = "error") {
+            const hub = document.getElementById('globalToastHub');
+            const visualBlock = document.getElementById('toastVisualBlock');
+            const iconSlot = document.getElementById('toastIconSlot');
+            const msgSlot = document.getElementById('toastMessageSlot');
+
+            visualBlock.className = `premium-toast-box type-${type}`;
+            msgSlot.textContent = message;
+
+            const errorSvg = `<svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+            const successSvg = `<svg fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+            
+            iconSlot.innerHTML = (type === "success") ? successSvg : errorSvg;
+
+            if (toastTimeoutPointer) clearTimeout(toastTimeoutPointer);
+
+            hub.classList.add('display-active');
+
+            toastTimeoutPointer = setTimeout(() => {
+                hub.classList.remove('display-active');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aviator - Network Profile</title>
+    <style>
+        :root {
+            --bg-pure: #030002;
+            --neon-red: #ff0037;
+            --neon-red-glow: rgba(255, 0, 55, 0.45);
+            --neon-red-dim: rgba(255, 0, 55, 0.15);
+            --glass-card: rgba(18, 5, 8, 0.6);
+            --glass-border: rgba(255, 0, 55, 0.18);
+            --text-main: #ffffff;
+            --text-muted: #a69fa3;
+            --premium-gold: #ffb700;
+            --success-green: #00e676;
+            --success-glow: rgba(0, 230, 118, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cabinet Grotesk', 'Segoe UI', system-ui, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-pure);
+            background-image: 
+                radial-gradient(circle at 50% -10%, rgba(255, 0, 55, 0.18) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 55, 0.1) 0%, transparent 40%),
+                linear-gradient(180deg, #050002 0%, #0c0104 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            padding-bottom: 95px;
+        }
+
+        /* Navbar Layout Window */
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: rgba(5, 0, 2, 0.85);
+            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .brand-header {
+            font-size: 1.3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-header svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--neon-red);
+            stroke-width: 2;
+            fill: none;
+            filter: drop-shadow(0 0 6px var(--neon-red));
+        }
+
+        .premium-tag {
+            font-size: 0.6rem;
+            background: linear-gradient(135deg, var(--premium-gold), #ff5500);
+            color: #000;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-weight: 900;
+        }
+
+        /* Container Blueprint */
+        .profile-container {
+            padding: 18px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            flex: 1;
+        }
+
+        /* Identity Terminal Header Node */
+        .identity-badge-module {
+            background: radial-gradient(circle at top right, rgba(255, 0, 55, 0.08), transparent), var(--glass-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar-ring {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--neon-red), var(--premium-gold));
+            padding: 3px;
+            box-shadow: 0 0 20px var(--neon-red-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-core {
+            width: 100%;
+            height: 100%;
+            background: #0d0407;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-core svg {
+            width: 32px;
+            height: 32px;
+            stroke: #ffffff;
+            fill: none;
+            stroke-width: 1.5;
+        }
+
+        .user-meta-name {
+            font-size: 1.3rem;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            color: var(--text-main);
+            text-transform: uppercase;
+        }
+
+        .meta-details-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+            margin-top: 4px;
+        }
+
+        .user-meta-detail {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+        }
+
+        .user-uid-badge {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-family: monospace;
+            letter-spacing: 0.5px;
+            margin-top: 6px;
+        }
+
+        /* Input Form Block Matrix */
+        .security-card-module {
+            background: var(--glass-card);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 24px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .module-header-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-main);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .module-header-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 14px;
+            background: var(--neon-red);
+            box-shadow: 0 0 8px var(--neon-red);
+            border-radius: 2px;
+        }
+
+        .input-group-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+
+        .input-element-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .input-field-node {
+            background: rgba(5, 1, 3, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 16px;
+            border-radius: 14px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .input-field-node:focus {
+            border-color: var(--neon-red);
+            box-shadow: 0 0 12px rgba(255, 0, 55, 0.15);
+            background: rgba(15, 2, 6, 0.8);
+        }
+
+        /* Terms & Conditions Box Styling */
+        .legal-card-link {
+            background: linear-gradient(135deg, rgba(255, 0, 55, 0.05), rgba(255, 183, 0, 0.03)), var(--glass-card);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 20px;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .legal-card-link:active {
+            transform: scale(0.98);
+            border-color: var(--glass-border);
+            background: linear-gradient(135deg, rgba(255, 0, 55, 0.08), rgba(255, 183, 0, 0.05)), var(--glass-card);
+        }
+
+        .legal-info-bundle {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .legal-icon-frame {
+            width: 38px;
+            height: 38px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--premium-gold);
+        }
+
+        .legal-text-frame {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            }
+
+        .legal-title-text {
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .legal-caption-text {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .legal-arrow-indicator {
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+
+        /* Action Buttons */
+        .btn-submit-action {
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 0.85rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            background: var(--neon-red);
+            color: #ffffff;
+            box-shadow: 0 4px 20px var(--neon-red-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 10px;
+        }
+
+        .btn-submit-action:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 10px var(--neon-red-glow);
+        }
+
+        .btn-logout-gate {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 14px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout-gate:active {
+            background: rgba(255, 0, 55, 0.05);
+            border-color: rgba(255, 0, 55, 0.2);
+            color: #ffffff;
+        }
+
+        /* Premium Floating Toast UI Portal */
+        .toast-notification-center {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-30px);
+            width: calc(100% - 32px);
+            max-width: 380px;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast-notification-center.display-active {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .premium-toast-box {
+            padding: 16px 20px;
+            border-radius: 18px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .premium-toast-box.type-error {
+            background: rgba(18, 2, 6, 0.92);
+            border: 1px solid var(--neon-red);
+            box-shadow: 0 0 25px rgba(255, 0, 55, 0.2), 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .premium-toast-box.type-success {
+            background: rgba(2, 18, 10, 0.92);
+            border: 1px solid var(--success-green);
+            box-shadow: 0 0 25px rgba(0, 230, 118, 0.15), 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .toast-status-icon-frame {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .toast-status-icon-frame svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .type-error .toast-status-icon-frame svg { stroke: var(--neon-red); }
+        .type-success .toast-status-icon-frame svg { stroke: var(--success-green); }
+
+        .toast-message-string {
+            font-size: 0.88rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            line-height: 1.4;
+        }
+
+        /* Premium Modular Confirmation Portal Overlay */
+        .premium-confirmation-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(3, 0, 2, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .premium-confirmation-overlay.modal-active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .confirmation-glass-node {
+            background: radial-gradient(circle at top left, rgba(255, 0, 55, 0.12), transparent), rgba(15, 4, 7, 0.85);
+            border: 1px solid var(--glass-border);
+            width: 100%;
+            max-width: 360px;
+            border-radius: 26px;
+            padding: 28px 24px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 0, 55, 0.05);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+        }
+
+        .premium-confirmation-overlay.modal-active .confirmation-glass-node {
+            transform: scale(1);
+        }
+
+        .confirmation-visual-badge {
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 0, 55, 0.06);
+            border: 1px solid rgba(255, 0, 55, 0.2);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neon-red);
+            margin: 0 auto 18px auto;
+            filter: drop-shadow(0 0 10px rgba(255, 0, 55, 0.15));
+        }
+
+        .confirmation-headline {
+            font-size: 1.15rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .confirmation-subtext {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .modal-action-grid {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-modal-dismiss {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-dismiss:active {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+
+        .btn-modal-confirm {
+            flex: 1;
+            background: var(--neon-red);
+            border: none;
+            color: #ffffff;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 0.78rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--neon-red-glow);
+            transition: all 0.2s ease;
+        }
+
+        .btn-modal-confirm:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 8px var(--neon-red-glow);
+        }
+
+        /* Sticky Footer Navigation Base Frame */
+        .bottom-navigation-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 72px;
+            background: rgba(4, 0, 2, 0.94);
+            border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+            padding: 0 10px;
+            box-shadow: 0 -5px 35px rgba(0, 0, 0, 0.8);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            gap: 6px;
+            flex: 1;
+            height: 100%;
+        }
+
+        .nav-item.active { color: #ffffff; }
+
+        .nav-icon-container {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-icon-container svg {
+            width: 100%;
+            height: 100%;
+            stroke: var(--text-muted);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .nav-item.active .nav-icon-container svg {
+            stroke: var(--neon-red);
+            filter: drop-shadow(0 0 6px var(--neon-red-glow));
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Premium Floating Toast UI Portal -->
+    <div class="toast-notification-center" id="globalToastHub">
+        <div class="premium-toast-box type-error" id="toastVisualBlock">
+            <div class="toast-status-icon-frame" id="toastIconSlot"></div>
+            <div class="toast-message-string" id="toastMessageSlot">Establishing encrypted stream parameters...</div>
+        </div>
+    </div>
+
+    <!-- Premium Modular Confirmation Portal Overlay -->
+    <div class="premium-confirmation-overlay" id="logoutConfirmationModal">
+        <div class="confirmation-glass-node">
+            <div class="confirmation-visual-badge">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            </div>
+            <h4 class="confirmation-headline">Terminate Session</h4>
+            <p class="confirmation-subtext">Are you sure you want to log out of the  core matrix ledger?</p>
+            <div class="modal-action-grid">
+                <button class="btn-modal-dismiss" id="abortLogoutBtn">Cancel</button>
+                <button class="btn-modal-confirm" id="confirmLogoutBtn">Log Out</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upper Navbar Context Frame -->
+    <header class="top-navbar">
+        <div class="brand-header">
+            <svg viewBox="0 0 24 24">
+                <path d="M6 3h12l4 6-10 12L2 9z"/>
+            </svg>
+            Aviator profile <div class="premium-tag">LIVE</div>
+        </div>
+    </header>
+
+    <!-- Main Container Element Space -->
+    <main class="profile-container">
+        
+        <!-- Identity Terminal Header Card -->
+        <section class="identity-badge-module">
+            <div class="avatar-ring">
+                <div class="avatar-core">
+                    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke-linecap="round"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+            </div>
+            <!-- Full Name Display Segment -->
+            <div class="user-meta-name" id="profileNameDisplay">Syncing Vector...</div>
+            
+            <div class="meta-details-grid">
+                <!-- Phone Number Display Segment Only -->
+                <div class="user-meta-detail" id="profilePhoneDisplay" style="color: var(--premium-gold); font-weight: 700; font-size: 1.05rem; margin-top: 4px;">--</div>
+            </div>
+            
+            <div class="user-uid-badge" id="profileUidDisplay">---</div>
+        </section>
+
+        <!-- Security Mutation Form Block Matrix -->
+        <section class="security-card-module">
+            <h3 class="module-header-title">Security Settings</h3>
+            
+            <div class="input-group-wrapper">
+                <label class="input-element-label">Current Password</label>
+                <input type="password" class="input-field-node" id="currentPasswordInput" placeholder="••••••••" autocomplete="current-password">
+            </div>
+
+            <div class="input-group-wrapper">
+                <label class="input-element-label">New Secure Password</label>
+                <input type="password" class="input-field-node" id="newPasswordInput" placeholder="Min 6 characters" autocomplete="new-password">
+            </div>
+
+            <div class="input-group-wrapper">
+                <label class="input-element-label">Confirm New Password</label>
+                <input type="password" class="input-field-node" id="confirmPasswordInput" placeholder="Match new password" autocomplete="new-password">
+            </div>
+
+            <button class="btn-submit-action" id="executePasswordChangeBtn">
+                Update Credentials
+            </button>
+        </section>
+
+        <!--  Terms and Conditions Reference Node -->
+        <section style="padding: 0 4px;">
+            <a href="temsandcondition.html" class="legal-card-link">
+                <div class="legal-info-bundle">
+                    <div class="legal-icon-frame">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    </div>
+                    <div class="legal-text-frame">
+                        <span class="legal-title-text">Terms & Conditions</span>
+                        <span class="legal-caption-text">Review  user regulations</span>
+                    </div>
+                </div>
+                <div class="legal-arrow-indicator">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+            </a>
+        </section>
+
+        <!-- Customer Support Reference Node -->
+        <section style="padding: 0 4px;">
+            <a href="customer-support.html" class="legal-card-link">
+                <div class="legal-info-bundle">
+                    <div class="legal-icon-frame">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <div class="legal-text-frame">
+                        <span class="legal-title-text">Customer Support</span>
+                        <span class="legal-caption-text">Get  matrix technical backup</span>
+                    </div>
+                </div>
+                <div class="legal-arrow-indicator">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+            </a>
+        </section>
+
+        <!-- System Exit Gateway Node -->
+        <section style="padding: 0 4px;">
+            <button class="btn-logout-gate" id="systemLogoutActionBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+            LOG OUT
+            </button>
+        </section>
+
+    </main>
+
+    <!-- Bottom Sticky Navigation Unit -->
+    <nav class="bottom-navigation-bar">
+        <a href="dashboard.html" class="nav-item">
+            <div class="nav-icon-container">
+                <svg viewBox="0 0 24 24">
+                    <rect x="2" y="6" width="20" height="12" rx="3" />
+                    <path d="M6 12h4M8 10v4" stroke-width="2.5"/>
+                </svg>
+            </div>
+            <span>Console</span>
+        </a>
+        <a href="history.html" class="nav-item">
+            <div class="nav-icon-container">
+                <svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            </div>
+            <span>RANKS</span>
+        </a>
+        <a href="wallet.html" class="nav-item">
+            <div class="nav-icon-container">
+                <svg viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 12L2 9z"/></svg>
+            </div>
+            <span>Vault</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <div class="nav-icon-container">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+            </div>
+            <span>Network</span>
+        </a>
+    </nav>
+
+    <!-- Application Script Module Processing Layer -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Firebase Production Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDrAocFm8fnX2hJg2TyKQbmNe65C8ta4OA",
+            authDomain: "aviator-f562e.firebaseapp.com",
+            databaseURL: "https://aviator-f562e-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "aviator-f562e",
+            storageBucket: "aviator-f562e.firebasestorage.app",
+            messagingSenderId: "649327828612",
+            appId: "1:649327828612:web:f599fb22598002b6016cd1",
+            measurementId: "G-RHZ13ET692"
+        };
+
+        // Initialize Services
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // UI Target Display Pointers
+        const profileNameDisplay = document.getElementById('profileNameDisplay');
+        const profilePhoneDisplay = document.getElementById('profilePhoneDisplay');
+        const profileUidDisplay = document.getElementById('profileUidDisplay');
+        
+        const currentPasswordInput = document.getElementById('currentPasswordInput');
+        const newPasswordInput = document.getElementById('newPasswordInput');
+        const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+
+        const logoutModal = document.getElementById('logoutConfirmationModal');
+        const abortLogoutBtn = document.getElementById('abortLogoutBtn');
+        const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+        
+        let activeUserInstance = null;
+        let unsubscribeProfileListener = null;
+
+        // Session Handshake Monitor
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                activeUserInstance = user;
+                profileUidDisplay.textContent = `UID: ${user.uid.slice(0, 8)}...${user.uid.slice(-4)}`;
+                bindLiveFirestoreProfile(user.uid);
+            } else {
+                if (unsubscribeProfileListener) unsubscribeProfileListener();
+                
+                dispatchPremiumToast("Session signature absent. Directing to login...", "error");
+                setTimeout(() => {
+                    window.location.href = "../login.html";
+                }, 2000);
+            }
+        });
+
+        // Realtime Firestore listener tracking profile configurations dynamically
+        function bindLiveFirestoreProfile(uid) {
+            const userDocRef = doc(db, "users", uid);
+            
+            unsubscribeProfileListener = onSnapshot(userDocRef, (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    const userData = docSnapshot.data();
+                    
+                    const fullName = userData.name || userData.fullName || "Anonymous Operator";
+                    let rawPhone = userData.phone || userData.phoneNumber;
+                    
+                    if (!rawPhone && activeUserInstance && activeUserInstance.email) {
+                        const emailString = activeUserInstance.email;
+                        if (emailString.includes('@')) {
+                            const possiblePhoneSegment = emailString.split('@')[0];
+                            if (/^\+?[0-9]{7,15}$/.test(possiblePhoneSegment)) {
+                                rawPhone = possiblePhoneSegment;
+                            }
+                        }
+                    }
+                    
+                    const formattedPhone = rawPhone || "No Mobile Found";
+                    
+                    profileNameDisplay.textContent = fullName;
+                    profilePhoneDisplay.textContent = formattedPhone;
+                } else {
+                    profileNameDisplay.textContent = "Unknown Operator";
+                    profilePhoneDisplay.textContent = "No Profile Registered";
+                }
+            }, (error) => {
+                console.error("Firestore pipeline parsing error: ", error);
+                dispatchPremiumToast("Failed to fetch cloud profile variables.", "error");
+            });
+        }
+
+        // Trigger Credential Mutation Processing Pipeline
+        document.getElementById('executePasswordChangeBtn').addEventListener('click', async () => {
+            const currentPass = currentPasswordInput.value.trim();
+            const newPass = newPasswordInput.value.trim();
+            const confirmPass = confirmPasswordInput.value.trim();
+
+            if (!currentPass || !newPass || !confirmPass) {
+                dispatchPremiumToast("Please populate all credential vectors.", "error");
+                return;
+            }
+
+            if (newPass.length < 6) {
+                dispatchPremiumToast("Security policy requires minimum 6 characters.", "error");
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                dispatchPremiumToast("Password verification mismatch detected.", "error");
+                return;
+            }
+
+            if (!activeUserInstance) return;
+
+            const submitBtn = document.getElementById('executePasswordChangeBtn');
+            submitBtn.textContent = "Processing Mutation...";
+            submitBtn.disabled = true;
+
+            try {
+                const credential = EmailAuthProvider.credential(activeUserInstance.email, currentPass);
+                await reauthenticateWithCredential(activeUserInstance, credential);
+                
+                await updatePassword(activeUserInstance, newPass);
+                
+                dispatchPremiumToast("Security ledger keys updated successfully.", "success");
+                
+                currentPasswordInput.value = "";
+                newPasswordInput.value = "";
+                confirmPasswordInput.value = "";
+
+            } catch (error) {
+                console.error("Mutation failed: ", error);
+                let readableErrorMessage = "Error modifying verification state keys.";
+                
+                if (error.code === 'auth/wrong-password') {
+                    readableErrorMessage = "The current password credentials match failed.";
+                } else if (error.code === 'auth/too-many-requests') {
+                    readableErrorMessage = "Spam block protection triggered. Try again later.";
+                }
+                
+                dispatchPremiumToast(readableErrorMessage, "error");
+            } finally {
+                submitBtn.textContent = "Update Credentials";
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Trigger Modal Interceptor & Connection Health Evaluator 
+        document.getElementById('systemLogoutActionBtn').addEventListener('click', () => {
+            if (!navigator.onLine) {
+                dispatchPremiumToast("Network connection missing. Failed to safely transmit terminal exit state keys.", "error");
+                return;
+            }
+            logoutModal.classList.add('modal-active');
+        });
+
+        // Modal Controls
+        abortLogoutBtn.addEventListener('click', () => {
+            logoutModal.classList.remove('modal-active');
+        });
+
+        // Terminate Session handshake action processing loop
+        confirmLogoutBtn.addEventListener('click', async () => {
+            logoutModal.classList.remove('modal-active');
+            
+            if (!navigator.onLine) {
+                dispatchPremiumToast("Network connection broken mid-session. Verification failed.", "error");
+                return;
+            }
+
+            try {
+                await signOut(auth);
+                dispatchPremiumToast("Session destroyed safely.", "success");
+                setTimeout(() => {
+                    window.location.href = "../login.html";
+                }, 1000);
+            } catch (error) {
+                dispatchPremiumToast("Error handling system closure.", "error");
+            }
+        });
+
+        // UI Toast Controller Module Engine
+        let toastTimeoutPointer = null;
+        function dispatchPremiumToast(message, type = "error") {
+            const hub = document.getElementById('globalToastHub');
+            const visualBlock = document.getElementById('toastVisualBlock');
+            const iconSlot = document.getElementById('toastIconSlot');
+            const msgSlot = document.getElementById('toastMessageSlot');
+
+            visualBlock.className = `premium-toast-box type-${type}`;
+            msgSlot.textContent = message;
+
+            const errorSvg = `<svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+            const successSvg = `<svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`;
+            
+            iconSlot.innerHTML = (type === "success") ? successSvg : errorSvg;
+
+            if (toastTimeoutPointer) clearTimeout(toastTimeoutPointer);
+
+            hub.classList.add('display-active');
+
+            toastTimeoutPointer = setTimeout(() => {
+                hub.classList.remove('display-active');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
