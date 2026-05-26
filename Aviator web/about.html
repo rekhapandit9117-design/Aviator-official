@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVAITER - About Us</title>
+    <style>
+        :root {
+            --bg-dark: #070002;
+            --neon-red: #ff0037;
+            --neon-glow: rgba(255, 0, 55, 0.5);
+            --card-glass: rgba(20, 4, 8, 0.75);
+            --border-glass: rgba(255, 0, 55, 0.2);
+            --text-white: #ffffff;
+            --text-dim: #b5aab0;
+            --premium-gold: #ffb700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 50% -20%, rgba(255, 0, 55, 0.25) 0%, transparent 60%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 55, 0.1) 0%, transparent 40%);
+            color: var(--text-white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 10px;
+            margin-bottom: 40px;
+        }
+
+        /* Top Action Bar */
+        .top-nav-bar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+
+        .btn-back {
+            background: rgba(255, 0, 55, 0.1);
+            border: 1px solid var(--border-glass);
+            color: var(--text-white);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-back:active {
+            background: var(--neon-red);
+            box-shadow: 0 0 15px var(--neon-glow);
+        }
+
+        .page-title-badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 900;
+            color: var(--neon-red);
+            border: 1px solid var(--neon-red);
+            padding: 4px 10px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(255, 0, 55, 0.2);
+        }
+
+        /* Premium Overview Card */
+        .about-card {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .section-heading {
+            font-size: 1.15rem;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 0, 55, 0.15);
+            padding-bottom: 8px;
+        }
+
+        .section-heading::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 16px;
+            background: var(--neon-red);
+            box-shadow: 0 0 8px var(--neon-red);
+            border-radius: 2px;
+        }
+
+        .about-paragraph {
+            color: var(--text-dim);
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .highlight-gold {
+            color: var(--premium-gold);
+            font-weight: 600;
+        }
+
+        /* Stats Grid Blueprint */
+        .metrics-matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .metric-tile {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .metric-value {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--neon-red);
+            text-shadow: 0 0 10px rgba(255, 0, 55, 0.3);
+        }
+
+        .metric-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        /* Roadmap Timeline Tracks */
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 6px;
+        }
+
+        .timeline-node {
+            display: flex;
+            gap: 14px;
+            position: relative;
+        }
+
+        .node-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .node-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--neon-red);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--neon-red);
+            margin-top: 6px;
+        }
+
+        .node-line {
+            width: 2px;
+            flex-grow: 1;
+            background: rgba(255, 0, 55, 0.15);
+            margin-top: 6px;
+        }
+
+        .timeline-node:last-child .node-line {
+            display: none;
+        }
+
+        .node-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding-bottom: 4px;
+        }
+
+        .node-phase {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--premium-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .node-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .node-desc {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        /* Footer Notice */
+        .footer-stamp {
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.25);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        
+        <!-- Top Navigation Header -->
+        <div class="top-nav-bar">
+            <a href="javascript:history.back()" class="btn-back">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back
+            </a>
+            <div class="page-title-badge">About Center</div>
+        </div>
+
+        <!-- Section 1: Core Identity Mission -->
+        <main class="about-card">
+            <h2 class="section-heading">Our Mission</h2>
+            <p class="about-paragraph">
+                <span class="highlight-gold">AVAITER</span> is a next-generation decentralized strategy and analytical gaming layer designed for modern mobile hardware. We challenge conventional architectures by delivering lightning-fast sync cycles, secure mathematical precision matrix, and an inclusive multiplayer ecosystem.
+            </p>
+            <p class="about-paragraph">
+                We bridge the gap between high-speed strategic decision making and interactive entertainment, giving every user an optimized environment to measure metrics, execute calculations, and grow.
+            </p>
+        </main>
+
+        <!-- Section 2: Platform Live Performance Stats -->
+        <section class="about-card">
+            <h2 class="section-heading">Ecosystem Status</h2>
+            <div class="metrics-matrix">
+                <div class="metric-tile">
+                    <span class="metric-value">99.98%</span>
+                    <span class="metric-label">Uptime Sync</span>
+                </div>
+                <div class="metric-tile">
+                    <span class="metric-value">10k+</span>
+                    <span class="metric-label">Active Users</span>
+                </div>
+                <div class="metric-tile">
+                    <span class="metric-value">&lt; 15ms</span>
+                    <span class="metric-label">Server Latency</span>
+                </div>
+                <div class="metric-tile">
+                    <span class="metric-value">256-Bit</span>
+                    <span class="metric-label">Data Sockets</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Engineering Roadmap Framework -->
+        <section class="about-card">
+            <h2 class="section-heading">Platform Roadmap</h2>
+            <div class="timeline-container">
+                
+                <div class="timeline-node">
+                    <div class="node-indicator">
+                        <div class="node-dot"></div>
+                        <div class="node-line"></div>
+                    </div>
+                    <div class="node-content">
+                        <span class="node-phase">Phase 01 • Active</span>
+                        <h4 class="node-title">Hyper Flight Distribution</h4>
+                        <p class="node-desc">Deployment of localized secure APK modules with high frame-rate rendering optimization.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-node">
+                    <div class="node-indicator">
+                        <div class="node-dot"></div>
+                        <div class="node-line"></div>
+                    </div>
+                    <div class="node-content">
+                        <span class="node-phase">Phase 02 • Pipeline</span>
+                        <h4 class="node-title">Elite Squad Matrix</h4>
+                        <p class="node-desc">Integration of cross-server leaderboards, live lobby channels, and team telemetry pools.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-node">
+                    <div class="node-indicator">
+                        <div class="node-dot"></div>
+                        <div class="node-line"></div>
+                    </div>
+                    <div class="node-content">
+                        <span class="node-phase">Phase 03 • Horizon</span>
+                        <h4 class="node-title">Global Tournament Sockets</h4>
+                        <p class="node-desc">Introduction of community-backed live championship systems with secure peer-to-peer verification loops.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

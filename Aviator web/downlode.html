@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVAITER - How To Download</title>
+    <style>
+        :root {
+            --bg-dark: #070002;
+            --neon-red: #ff0037;
+            --neon-glow: rgba(255, 0, 55, 0.5);
+            --card-glass: rgba(20, 4, 8, 0.75);
+            --border-glass: rgba(255, 0, 55, 0.2);
+            --text-white: #ffffff;
+            --text-dim: #b5aab0;
+            --premium-gold: #ffb700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 50% -20%, rgba(255, 0, 55, 0.25) 0%, transparent 60%),
+                radial-gradient(circle at 30% 80%, rgba(255, 0, 55, 0.1) 0%, transparent 40%);
+            color: var(--text-white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 10px;
+            margin-bottom: 40px;
+        }
+
+        /* Top Action Bar */
+        .top-nav-bar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+
+        .btn-back {
+            background: rgba(255, 0, 55, 0.1);
+            border: 1px solid var(--border-glass);
+            color: var(--text-white);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-back:active {
+            background: var(--neon-red);
+            box-shadow: 0 0 15px var(--neon-glow);
+        }
+
+        .page-title-badge {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 900;
+            color: var(--neon-red);
+            border: 1px solid var(--neon-red);
+            padding: 4px 10px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(255, 0, 55, 0.2);
+        }
+
+        /* Main Context Card */
+        .guide-card {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .section-heading {
+            font-size: 1.15rem;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 0, 55, 0.15);
+            padding-bottom: 8px;
+        }
+
+        .section-heading::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 16px;
+            background: var(--neon-red);
+            box-shadow: 0 0 8px var(--neon-red);
+            border-radius: 2px;
+        }
+
+        /* High-Tech Procedural Step Layout */
+        .step-sequence {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 8px;
+        }
+
+        .step-block {
+            display: flex;
+            gap: 16px;
+            position: relative;
+        }
+
+        .step-aside {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .step-counter {
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 0, 55, 0.1);
+            border: 1px solid var(--neon-red);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.85rem;
+            box-shadow: 0 0 10px rgba(255, 0, 55, 0.3);
+        }
+
+        .step-connector-line {
+            width: 2px;
+            flex-grow: 1;
+            background: linear-gradient(to bottom, var(--neon-red), rgba(255, 0, 55, 0.05));
+            margin-top: 8px;
+        }
+
+        .step-block:last-child .step-connector-line {
+            display: none;
+        }
+
+        .step-body {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-top: 3px;
+        }
+
+        .step-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .step-instruction {
+            color: var(--text-dim);
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        .highlight-alert {
+            color: var(--premium-gold);
+            font-weight: 600;
+        }
+
+        .highlight-action {
+            color: var(--neon-red);
+            font-weight: 600;
+        }
+
+        /* Requirements Matrix styling */
+        .specifications-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+        }
+
+        .specifications-table tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .specifications-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .specifications-table td {
+            padding: 12px 6px;
+            font-size: 0.88rem;
+        }
+
+        .spec-label {
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+
+        .spec-value {
+            color: #ffffff;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        /* Footer Notice */
+        .footer-stamp {
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.25);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        
+        <!-- Top Navigation Header -->
+        <div class="top-nav-bar">
+            <a href="javascript:history.back()" class="btn-back">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back
+            </a>
+            <div class="page-title-badge">Guide Center</div>
+        </div>
+
+        <!-- Section 1: Step-by-Step Deployment Instructions -->
+        <main class="guide-card">
+            <h2 class="section-heading">Installation Steps</h2>
+            
+            <div class="step-sequence">
+                
+                <!-- Step 1 -->
+                <div class="step-block">
+                    <div class="step-aside">
+                        <div class="step-counter">1</div>
+                        <div class="step-connector-line"></div>
+                    </div>
+                    <div class="step-body">
+                        <h4 class="step-title">Get APK File</h4>
+                        <p class="step-instruction">
+                            Homepage par jaakar <span class="highlight-action">"DOWNLOAD OFFICIAL APK"</span> button par click karein. Aapki file automatic background mein save hona start ho jayegi.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-block">
+                    <div class="step-aside">
+                        <div class="step-counter">2</div>
+                        <div class="step-connector-line"></div>
+                    </div>
+                    <div class="step-body">
+                        <h4 class="step-title">Enable Unknown Sources</h4>
+                        <p class="step-instruction">
+                            Agar aapko warning milti hai, toh apne phone ki <span class="highlight-alert">Settings ➔ Security</span> mein jayein aur <span class="highlight-alert">"Unknown Sources"</span> ya <i>"Install Unknown Apps"</i> permission ko allow karein.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-block">
+                    <div class="step-aside">
+                        <div class="step-counter">3</div>
+                        <div class="step-connector-line"></div>
+                    </div>
+                    <div class="step-body">
+                        <h4 class="step-title">Execute Installation</h4>
+                        <p class="step-instruction">
+                            Apne browser ke Downloads manager ya File Explorer mein jaakar <code>Avaiter_Official.apk</code> par click karein aur <span class="highlight-action">"Install"</span> select karein.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step-block">
+                    <div class="step-aside">
+                        <div class="step-counter">4</div>
+                        <div class="step-connector-line"></div>
+                    </div>
+                    <div class="step-body">
+                        <h4 class="step-title">Launch and Play</h4>
+                        <p class="step-instruction">
+                            Installation finish hone ke baad app icon par click karke application open karein, register karein aur flight parameters track karna start karein!
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+</body>
+</html>

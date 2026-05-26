@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download AVAITER Official APK</title>
+    <style>
+        :root {
+            --bg-dark: #070002;
+            --neon-red: #ff0037;
+            --neon-glow: rgba(255, 0, 55, 0.5);
+            --card-glass: rgba(20, 4, 8, 0.75);
+            --border-glass: rgba(255, 0, 55, 0.2);
+            --text-white: #ffffff;
+            --text-dim: #b5aab0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 50% -20%, rgba(255, 0, 55, 0.25) 0%, transparent 60%),
+                radial-gradient(circle at 10% 80%, rgba(255, 0, 55, 0.1) 0%, transparent 40%);
+            color: var(--text-white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Top Header Control Area */
+        .top-header-controls {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            justify-content: flex-end;
+            position: relative;
+            z-index: 100;
+        }
+
+        /* Three Dot Menu Trigger */
+        .three-dot-menu-btn {
+            background: transparent;
+            border: none;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .three-dot-menu-btn:active {
+            background: rgba(255, 0, 55, 0.15);
+        }
+
+        .three-dot-menu-btn span {
+            width: 5px;
+            height: 5px;
+            background-color: var(--text-white);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--neon-red);
+            transition: background-color 0.2s;
+        }
+
+        .three-dot-menu-btn:active span {
+            background-color: var(--neon-red);
+        }
+
+        /* Floating Nav Dropdown Matrix */
+        .nav-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: rgba(15, 3, 6, 0.96);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            width: 170px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7), 0 0 15px rgba(255, 0, 55, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            overflow: hidden;
+            animation: menuFadeIn 0.2s ease-out;
+        }
+
+        @keyframes menuFadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-dropdown-item {
+            display: block;
+            color: var(--text-dim);
+            text-decoration: none;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255, 0, 55, 0.08);
+            transition: all 0.2s ease;
+        }
+
+        .nav-dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .nav-dropdown-item:active {
+            background: var(--neon-red);
+            color: var(--text-white);
+            padding-left: 20px;
+        }
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 10px;
+            margin-bottom: 40px;
+        }
+
+        /* Brand Identity Hub */
+        .brand-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+        }
+
+        .logo-container {
+            width: 90px;
+            height: 90px;
+            border-radius: 22px;
+            border: 2px solid var(--neon-red);
+            box-shadow: 0 0 20px var(--neon-glow), inset 0 0 10px var(--neon-glow);
+            background: #120104;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px var(--neon-red);
+        }
+
+        .download-counter-badge {
+            background: rgba(255, 0, 55, 0.12);
+            border: 1px solid var(--border-glass);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--text-white);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #00ff66;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00ff66;
+            animation: pulse 1.8s infinite;
+        }
+
+        /* Thought Engine Card */
+        .thought-card {
+            background: var(--card-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .thought-heading {
+            font-size: 1.15rem;
+            color: var(--neon-red);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            text-shadow: 0 0 8px rgba(255, 0, 55, 0.3);
+        }
+
+        .thought-body {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .thought-quote {
+            border-left: 3px solid var(--neon-red);
+            padding-left: 12px;
+            font-style: italic;
+            color: var(--text-white);
+            font-weight: 600;
+            margin-top: 14px;
+        }
+
+        /* Trigger Actions */
+        .action-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-download {
+            width: 100%;
+            background: var(--neon-red);
+            color: var(--text-white);
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--neon-glow);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-download:active {
+            transform: scale(0.98);
+            background: #ff2654;
+            box-shadow: 0 0 30px #ff2654;
+        }
+
+        .btn-download svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* APK File Drop Location Tracker */
+        .apk-source-highlight {
+            background: rgba(255, 183, 0, 0.05);
+            border: 1px dashed #ffb700;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 0.75rem;
+            text-align: center;
+            color: #ffb700;
+            line-height: 1.4;
+        }
+
+        .apk-source-highlight code {
+            background: rgba(0,0,0,0.4);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        /* Horizontal Carousel Architecture */
+        .showcase-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-dim);
+            font-weight: 700;
+            padding-left: 4px;
+        }
+
+        .carousel-view {
+            width: 100%;
+            overflow: hidden;
+            border-radius: 18px;
+            border: 1px solid var(--border-glass);
+            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .screenshot-track {
+            display: flex;
+            width: 300%;
+            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .screenshot-wrapper {
+            width: 33.3333%;
+            flex-shrink: 0;
+        }
+
+        .screenshot-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* Carousel dots */
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--neon-red);
+            box-shadow: 0 0 8px var(--neon-red);
+            width: 18px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 480px) {
+            .top-header-controls {
+                padding-right: 5px;
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Context Control Navigation Hub -->
+    <div class="top-header-controls">
+        <button class="three-dot-menu-btn" id="menuTrigger" onclick="toggleNavigationMenu(event)">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        
+        <nav class="nav-dropdown-menu" id="dropdownMenu">
+            <a href="rule.html" class="nav-dropdown-item">Rules</a>
+            <a href="about.html" class="nav-dropdown-item">About</a>
+            <a href="downlode.html" class="nav-dropdown-item">How to Download</a>
+        </nav>
+    </div>
+
+    <div class="main-wrapper">
+        
+        <!-- App Logo & Stats -->
+        <header class="brand-profile">
+            <div class="logo-container">
+                <img src="logo.png" alt="AVAITER App Logo" onerror="this.style.display='none'; this.parentNode.innerText='LOGO';">
+            </div>
+            <h1 class="brand-title">Avaiter</h1>
+            <div class="download-counter-badge">
+                <div class="live-dot"></div>
+                <span>10k+ Active Participations</span>
+            </div>
+        </header>
+
+        <!-- Core Thought Engine -->
+        <article class="thought-card">
+            <h2 class="thought-heading">Why Choose AVAITER?</h2>
+            <p class="thought-body">
+                AVAITER ka main goal ek strong gaming community create karna hai jahan har player ko equal opportunity mile. Chahe aap beginner ho ya pro gamer, yahan har match aapko grow karne ka chance deta hai.
+            </p>
+            <p class="thought-body"> Hum believe karte hain:</p>
+            <div class="thought-quote">
+                “Every Player Has Potential to Become Legendary.”
+            </div>
+        </article>
+
+        <!-- Main Action Segment -->
+        <div class="action-container">
+            <button class="btn-download" onclick="startApkDownload()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+                </svg>
+                Download Official APK
+            </button>
+
+        <!-- Horizontal Automated Screenshots Showcase -->
+        <section class="showcase-container">
+            <h3 class="section-label">Screenshots</h3>
+            
+            <div class="carousel-view">
+                <div class="screenshot-track" id="carouselTrack">
+                    
+                    <div class="screenshot-wrapper">
+                        <img src="screenshort1.png" alt="Participation Screen 1" onerror="this.parentNode.style.padding='120px 10px'; this.parentNode.style.textAlign='center'; this.parentNode.innerText='[ screenshort1.png ]';">
+                    </div>
+
+                    <div class="screenshot-wrapper">
+                        <img src="screenshort2.png" alt="Participation Screen 2" onerror="this.parentNode.style.padding='120px 10px'; this.parentNode.style.textAlign='center'; this.parentNode.innerText='[ screenshort2.png ]';">
+                    </div>
+
+                    <div class="screenshot-wrapper">
+                        <img src="screenshort3.png" alt="Participation Screen 3" onerror="this.parentNode.style.padding='120px 10px'; this.parentNode.style.textAlign='center'; this.parentNode.innerText='[ screenshort3.png ]';">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="carousel-dots">
+                <div class="dot active" data-index="0"></div>
+                <div class="dot" data-index="1"></div>
+                <div class="dot" data-index="2"></div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // APK Downloader Script Entry Point
+        function startApkDownload() {
+            const apkFileUrl = "https://example.com/path-to-your-app/avaiter.apk"; 
+            
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.href = apkFileUrl;
+            downloadAnchor.download = "Avaiter_Official.apk";
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            document.body.removeChild(downloadAnchor);
+        }
+
+        // Horizontal Carousel Engine Logic
+        const track = document.getElementById('carouselTrack');
+        const dots = document.querySelectorAll('.dot');
+        let currentIndex = 0;
+        const totalScreenshots = 3;
+
+        function updateSlider(index) {
+            const shiftValue = -(index * 33.3333);
+            track.style.transform = `translateX(${shiftValue}%)`;
+            
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+        }
+
+        setInterval(() => {
+            currentIndex++;
+            if (currentIndex >= totalScreenshots) {
+                currentIndex = 0;
+            }
+            updateSlider(currentIndex);
+        }, 3000);
+
+        // Dropdown Menu Controllers
+        function toggleNavigationMenu(event) {
+            event.stopPropagation(); // Prevents document click trigger close event immediately
+            const menu = document.getElementById("dropdownMenu");
+            if (menu.style.display === "block") {
+                menu.style.display = "none";
+            } else {
+                menu.style.display = "block";
+            }
+        }
+
+        // Global Event listener to close dropdown menu if user clicks anywhere outside of it
+        document.addEventListener("click", function(event) {
+            const menu = document.getElementById("dropdownMenu");
+            const trigger = document.getElementById("menuTrigger");
+            
+            if (menu && menu.style.display === "block" && !trigger.contains(event.target)) {
+                menu.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
